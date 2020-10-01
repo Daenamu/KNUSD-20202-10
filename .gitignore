@@ -1,0 +1,6 @@
+password.txt
+.vscode
+/**/migrations/
+/**/__pycache__
+team10/knu_reminder/settings.py
+team10/db.sqlite3
