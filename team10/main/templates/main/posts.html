@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학과공지 알리미</title>
+    <link rel = "stylesheet" href="css/bootstrap.css">
+    <link rel = "stylesheet" href="css/site.css">
+    <link rel="shortcut icon" href="http://www.knu.ac.kr/wbbs/img/favicon.ico"/>
+    <style>
+        h1{
+            font-size: 70px;
+            text-align: center;
+        }
+    </style>
+
+</head>
+<body>
+    <!--학과이름-->
+    <br>
+    <h1>
+        <img src = "knu_image.jpg" width = "150" height = "50">
+        {{ object.title }}
+    </h1>
+
+    <br><br>
+    <div class = "container">
+        <!--검색창-->
+        <div style="float: right;">
+            <form class="navbar-search pull-right">
+                <input class="search-query" type="text" placeholder="Search">
+                <input class="btn btn-secondary" type="submit" value="검색">
+            </form>
+        </div>
+
+
+        <!--공지리스트-->
+        <table class = "table table-striped">
+            <thead> 
+                <tr> 
+                    <th width = "30">번호</th> 
+                    <th width = "400">제목</th> 
+                    <th width = "80">등록일</th> 
+                </tr> 
+            </thead> 
+            <tbody> 
+                {% for post in object_list %}
+                <tr> 
+                    <td class = "text-center">{{ forloop.revcounter }}</td> 
+                    <td><a href="{% url 'main:post_detail' post.id %}">{{ post.title }}</a></td> 
+                    <td class = "text-center">{{ post.upload_dt }}</td> 
+                </tr> 
+                {% endfor %} 
+            </tbody>     
+        </table>    
+
+        <!--페이지번호-->
+        <div class = "text-center">
+            <ul class = "pagination justify-content-center">
+                <li class = "page-item"><a class="page-link" href="#">이전</a></li>
+                <li class = "page-item"><a class="page-link" href="#">1</a></li>
+                <li class = "page-item"><a class="page-link" href="#">2</a></li>
+                <li class = "page-item"><a class="page-link" href="#">3</a></li>
+                <li class = "page-item"><a class="page-link" href="#">4</a></li>
+                <li class = "page-item"><a class="page-link" href="#">5</a></li>
+                <li class = "page-item"><a class="page-link" href="#">다음</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <script src = "http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type = "text/javascript" src = "js/bootstrap.js"></script>
+</body>
+</html>
