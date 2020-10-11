@@ -1,11 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>학과공지 알리미</title>
-    <link rel = "stylesheet" href="css/bootstrap.css">
-    <link rel = "stylesheet" href="css/site.css">
+    <link rel = "stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel = "stylesheet" href="{% static 'css/site.css' %}">
     <link rel="shortcut icon" href="http://www.knu.ac.kr/wbbs/img/favicon.ico"/>
     <style>
         h1{
@@ -19,8 +20,8 @@
     <!--학과이름-->
     <br>
     <h1>
-        <img src = "knu_image.jpg" width = "150" height = "50">
-        {{ object.title }}
+        <img src = "{% static 'image/knu_image.jpg' %}" width = "150" height = "50">
+        <!--{{ object.title }}-->
     </h1>
 
     <br><br>
@@ -69,6 +70,6 @@
     </div>
     
     <script src = "http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script type = "text/javascript" src = "js/bootstrap.js"></script>
+    <script type = "text/javascript" src = "{% static 'js/bootstrap.js' %}"></script>
 </body>
 </html>
