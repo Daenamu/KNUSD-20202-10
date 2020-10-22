@@ -17,7 +17,9 @@ _장고 가상환경 설정_
 3. `mkvirtual 가상환경이름` : 새 파이썬 가상환경 생성
 4. `workon 가상환경이름` : 파이썬 가상 환경 실행 _// workon 으로 파이썬 가상환경 리스트 확인 가능_
 5. `pip install django` : 파이썬 가상 환경에 장고 설치 
-6. `pip install 패키지이름` : 그 외 패키지 설치 (현재는 없음) _// pip list 로 패키지 리스트 확인_
+6. `pip install 패키지이름` : 그 외 패키지 설치 _// pip list 로 패키지 리스트 확인_
+
+    - 패키지: requests, bs4
 
 _번외: 버전 관리_
 1. `pip install -U pip setuptools wheel` : 패키지 툴 업그레이드
