@@ -20,3 +20,9 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_previous(self):
+        return self.get_previous_by_upload_dt()
+
+    def get_next(self):
+        return self.get_next_by_upload_dt()
