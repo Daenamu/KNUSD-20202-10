@@ -1,11 +1,12 @@
+'''학사공지 crawl'''
+
 import requests
 from bs4 import BeautifulSoup
-'''학사공지 crawl'''
 
 PAGE = 1
 URL = f"https://knu.ac.kr/wbbs/wbbs/bbs/btin/stdList.action?btin.page={PAGE}&popupDeco=false&btin.search_type=&btin.search_text=&menu_idx=42"
 
-def extract_indeed_pages(): #last page return
+def extract_indeed_pages():  # last page return
     result = requests.get(URL)
     soup = BeautifulSoup(result.text, "html.parser")
 
@@ -24,11 +25,11 @@ def extract_content_url(doc_no, appl_no, note_div, now_page):
 def find_notice_note_div(html):
     content_href = html.find("a").attrs["href"]
     content_href = content_href[len("javascript:doRead("):-2]
-    list = content_href.split("\'")
+    List = content_href.split("\'")
 
     for i in range(0, 5):
-        del list[i]
-    note = list[3]
+        del List[i]
+    note = List[3]
 
     return note
 
@@ -36,14 +37,14 @@ def find_notice_note_div(html):
 def find_content_url_parameter(html, page_num):
     content_href = html.find("a").attrs["href"]
     content_href = content_href[len("javascript:doRead("):-2]
-    list = content_href.split("\'")
+    List = content_href.split("\'")
 
     for i in range(0, 5):
-        del list[i]
+        del List[i]
 
-    doc = list[0]
-    appl = list[1]
-    note = list[3]
+    doc = List[0]
+    appl = List[1]
+    note = List[3]
     now = page_num
     url = extract_content_url(doc, appl, note, now)
     return url
@@ -74,8 +75,9 @@ def haksa_crawl(html, page_num):
     url = find_content_url_parameter(html, page_num)
     content = extract_content_text(url)
 
-    dict = {'title': title, 'modify_dt': modify_dt, 'content': content, 'type': "학사공지", 'url': url}
-    return dict
+    dict_data = {'title': title, 'modify_dt': modify_dt,
+            'content': content, 'type': "학사공지", 'url': url}
+    return dict_data
 
 
 def loop_extract(notices, page):
@@ -92,25 +94,32 @@ def loop_extract(notices, page):
         #haksa_crawl(result, page)
 
 
-def extract_indeed_notices(last_pages):
+def extract_indeed_notices():
+    count = 0
+    last_pages = extract_indeed_pages()
     notices = []
     page = 1
     loop_extract(notices, page)
 
     for page in range(2, last_pages + 1):
-        link = requests.get(f"https://knu.ac.kr/wbbs/wbbs/bbs/btin/stdList.action?btin.page={page}&popupDeco=false&btin.search_type=&btin.search_text=&menu_idx=42")
+        count = 0
+        link = requests.get(
+            f"https://knu.ac.kr/wbbs/wbbs/bbs/btin/stdList.action?btin.page={page}&popupDeco=false&btin.search_type=&btin.search_text=&menu_idx=42")
         soup = BeautifulSoup(link.text, "html.parser")
-        result = soup.find("table", {"title":"학사 공지사항"})
+        result = soup.find("table", {"title": "학사 공지사항"})
         results = result.find_all("tr")
-
 
         for result in results[1:]:
             note = find_notice_note_div(result)
             if (note == "row"):
                 notice = haksa_crawl(result, page)
                 notices.append(notice)
+                count = count + 1
+                print(f"{page - 1}page {count}번 게시물 crawling")
                 #print(haksa_crawl(result, page))
                 #haksa_crawl(result, page)
-
     #print(notices[0])
     return notices
+
+
+

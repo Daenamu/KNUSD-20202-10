@@ -10,7 +10,7 @@ class Post(models.Model):
     content = models.TextField('Content', blank=True)
     upload_dt = models.DateTimeField('Upload Date')
     department = models.CharField('Department', max_length=50)
-    url = models.URLField('URL', unique=True)
+    url = models.URLField('URL')
 
     class Meta:
         verbose_name = 'post'
