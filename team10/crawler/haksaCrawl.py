@@ -122,4 +122,32 @@ def extract_indeed_notices():
     return notices
 
 
+# 가장 최근의 게시물의 제목을 str로 return
+def check_latest():
+    page = 1
+    link = requests.get(
+            f"https://knu.ac.kr/wbbs/wbbs/bbs/btin/stdList.action?btin.page={page}&popupDeco=false&btin.search_type=&btin.search_text=&menu_idx=42")
+    soup = BeautifulSoup(link.text, "html.parser")
+    result = soup.find("table", {"title": "학사 공지사항"})
+    results = result.find_all("tr")
+    for result in results[1:2]:
+        notice = haksa_crawl(result, page)
+    return notice['title']
 
+# 게시물 업데이트
+def extract_latest_notices(latest):
+    notices = []
+    page = 1
+    link = requests.get(
+            f"https://knu.ac.kr/wbbs/wbbs/bbs/btin/stdList.action?btin.page={page}&popupDeco=false&btin.search_type=&btin.search_text=&menu_idx=42")
+    soup = BeautifulSoup(link.text, "html.parser")
+    result = soup.find("table", {"title": "학사 공지사항"})
+    results = result.find_all("tr")
+
+    for result in results[1:]:
+        notice = haksa_crawl(result, page)
+        if notice['title'] == latest: 
+            break
+        notices.append(notice)
+
+    return notices
