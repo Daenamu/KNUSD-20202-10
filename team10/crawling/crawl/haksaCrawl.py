@@ -125,7 +125,7 @@ def extract_indeed_notices(last_pages):
             if (note == "row"):
                 notice = haksa_crawl(result, page)
                 notices.append(notice)
-                print(haksa_crawl(result, page))
+                #print(haksa_crawl(result, page))
                 #haksa_crawl(result, page)
 
     #print(notices[0])
