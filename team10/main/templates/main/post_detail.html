@@ -57,9 +57,9 @@
         <br>
         <div class = "row text-center">
             <div class= "col">
-                <button type="button" class="btn btn-outline-secondary">이전글</button>
+                <button type="button" class="btn btn-outline-secondary"><a href="{{ post.get_previous.get_absolute_url }}">이전글</a></button>
                 <button type="button" class="btn btn-outline-secondary">목록</button>
-                <button type="button" class="btn btn-outline-secondary">다음글</button>
+                <button type="button" class="btn btn-outline-secondary"><a href="{{ post.get_next.get_absolute_url }}">다음글</a></button>
             </div>    
         </div>
     </div>
