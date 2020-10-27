@@ -113,6 +113,7 @@ def haksa_crawl(html, page_num):
 
 def extract_indeed_notices(last_pages):
     notices = []
+    count = 0
 
     for page in range(1, last_pages + 1):
         link = requests.get(f"https://knu.ac.kr/wbbs/wbbs/bbs/btin/stdList.action?btin.page={page}&popupDeco=false&btin.search_type=&btin.search_text=&menu_idx=42")

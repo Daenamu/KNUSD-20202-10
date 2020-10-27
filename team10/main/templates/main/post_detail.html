@@ -51,6 +51,16 @@
             <tr>
                 <td>{{ post.content|linebreaks }}</td>
             </tr>
+            {% if post.image_url %}
+                <tr>
+                    <td><img src = "{{ post.image_url }}.jpg"></td>
+                </tr>
+            {% endif %}
+            {% if post.download_url %}
+                <tr>
+                    <td><a href="{{ post.download_url }}">{{ post.download_url }}</a></td>
+                </tr>
+            {% endif %}
         </table>
         
         <!--이전/다음글 버튼-->

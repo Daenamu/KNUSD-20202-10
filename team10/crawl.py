@@ -7,7 +7,10 @@ from main.models import Post
 from crawler.haksaCrawl import extract_indeed_notices, check_latest, extract_latest_notices, extract_indeed_pages
 
 def update_haksa():
-    key = Post.objects.filter(department="학사공지").latest('upload_dt')
+    try:
+        key = Post.objects.filter(department="학사공지").latest('upload_dt')
+    except:
+        key = None
 
     if key:
         print(f"{key} is latest saved post")
@@ -24,7 +27,7 @@ def update_haksa():
     else:
         data_dict = extract_indeed_notices(extract_indeed_pages())
         for data in data_dict:
-            fb = Post(title=data['title'], upload_dt=data['modify_dt'], department=data['type'], content=data['content'], url=data['url'])
+            fb = Post(title=data['title'], upload_dt=data['modify_dt'], department=data['type'], content=data['content'], url=data['url'], image_url=data['image_url'], download_url=['download_url'])
             fb.save()
 
 if __name__ == '__main__':
