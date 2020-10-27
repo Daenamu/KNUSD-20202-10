@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학과공지 알리미</title>
+    <link rel = "stylesheet" href="{static 'css/bootstrap.css' %}">
+    <link rel = "stylesheet" href="{static 'css/site.css' %}">
+    <link rel="shortcut icon" href="http://www.knu.ac.kr/wbbs/img/favicon.ico"/>
+    <style>
+        h1{
+            font-size: 70px;
+            text-align: center;
+        }
+        th {
+            border-top: 2px solid;
+            border-bottom: 0.5px solid;
+            padding: 10px 5px;
+            border-color: gray;
+            width: 1400px;
+            background-color: rgb(206, 206, 206);
+        }
+        td {
+            border-bottom: 1px solid;
+            padding: 10px 5px;
+            border-color: gray;
+            width: 1400px;
+        }
+    </style> 
+</head>
+
+<body>
+    <!--학과이름-->
+    <br>
+    <h1>
+        <img src = "{static 'image/knu_image.jpg' %}" width = "150" height = "50">
+        {{ post.department }}
+    </h1>   
+     
+    <br><br>
+    <div class = "container">
+        <!--게시글-->
+        <table>
+            <tr>
+                <th>{{ post.title }}</th>
+            </tr>
+            <tr>
+                <td>작성일 {{ post.upload_dt }}</td>
+            </tr>
+            <tr>
+                <td>{{ post.content }}</td>
+            </tr>
+        </table>
+        
+        <!--이전/다음글 버튼-->
+        <br>
+        <div class = "row text-center">
+            <div class= "col">
+                <button type="button" class="btn btn-outline-secondary">이전글</button>
+                <button type="button" class="btn btn-outline-secondary">목록</button>
+                <button type="button" class="btn btn-outline-secondary">다음글</button>
+            </div>    
+        </div>
+    </div>
+        
+    <script src = "http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type = "text/javascript" src = "{static 'js/bootstrap.js' %}"></script>
+</body>
+</html>
