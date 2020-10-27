@@ -8,6 +8,7 @@ from main.models import Post
 class PostLV(ListView):
     template_name = 'main/post_list.html'
     model = Post
+    paginate_by = 20
 
 
 class PostDV(DetailView):

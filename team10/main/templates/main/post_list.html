@@ -58,13 +58,25 @@
         <!--페이지번호-->
         <div class = "text-center">
             <ul class = "pagination justify-content-center">
-                <li class = "page-item"><a class="page-link" href="#">이전</a></li>
-                <li class = "page-item"><a class="page-link" href="#">1</a></li>
-                <li class = "page-item"><a class="page-link" href="#">2</a></li>
-                <li class = "page-item"><a class="page-link" href="#">3</a></li>
-                <li class = "page-item"><a class="page-link" href="#">4</a></li>
-                <li class = "page-item"><a class="page-link" href="#">5</a></li>
-                <li class = "page-item"><a class="page-link" href="#">다음</a></li>
+                {% if page_obj.has_previous %}
+                    {% if page_obj.previous_page_number > 1 %}
+                        <li class = "page-item"><a class="page-link" href="?page=1">맨 앞으로</a></li>
+                    {% endif %}
+                    {% if page_obj.number|add:-10 > 1 %}
+                        <li class = "page-item"><a class="page-link" href="?page={{ page_obj.number|add:-10 }}">{{ page_obj.number|add:-10 }}</a></li>
+                        <li class = "page-item"><a class="page-link" href="#">...</a></li>
+                    {% endif %}
+                    <li class = "page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
+                {% endif %}
+                <li class = "page-item"><a class="page-link" href="#">{{ page_obj.number }}</a></li>
+                {% if page_obj.has_next %}
+                    <li class = "page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
+                    <li class = "page-item"><a class="page-link" href="#">...</a></li>
+                    {% if page_obj.number|add:10 < page_obj.paginator.num_pages %}
+                        <li class = "page-item"><a class="page-link" href="?page={{ page_obj.number|add:10 }}">{{ page_obj.number|add:10 }}</a></li>
+                    {% endif %}
+                    <li class = "page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">맨 뒤로</a></li>
+                {% endif %}
             </ul>
         </div>
     </div>

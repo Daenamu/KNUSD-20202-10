@@ -1,12 +1,17 @@
+'''학사공지 crawl'''
+
 import requests
 from bs4 import BeautifulSoup
+<<<<<<< HEAD:team10/crawling/crawl/haksaCrawl.py
 import re
 '''학사공지 crawl'''
+=======
+>>>>>>> master:team10/crawler/haksaCrawl.py
 
 PAGE = 1
 URL = f"https://knu.ac.kr/wbbs/wbbs/bbs/btin/stdList.action?btin.page={PAGE}&popupDeco=false&btin.search_type=&btin.search_text=&menu_idx=42"
 
-def extract_indeed_pages(): #last page return
+def extract_indeed_pages():  # last page return
     result = requests.get(URL)
     soup = BeautifulSoup(result.text, "html.parser")
 
@@ -25,10 +30,18 @@ def extract_content_url(doc_no, appl_no, note_div, now_page): #notice content ur
 def find_notice_note_div(html): #notice top or row return
     content_href = html.find("a").attrs["href"]
     content_href = content_href[len("javascript:doRead("):-2]
+<<<<<<< HEAD:team10/crawling/crawl/haksaCrawl.py
     list = content_href.split(",")
 
     note = list[3].strip()
     note = note[1:-1]
+=======
+    List = content_href.split("\'")
+
+    for i in range(0, 5):
+        del List[i]
+    note = List[3]
+>>>>>>> master:team10/crawler/haksaCrawl.py
 
     return note
 
@@ -36,14 +49,14 @@ def find_notice_note_div(html): #notice top or row return
 def find_content_url_parameter(html, page_num):
     content_href = html.find("a").attrs["href"]
     content_href = content_href[len("javascript:doRead("):-2]
-    list = content_href.split("\'")
+    List = content_href.split("\'")
 
     for i in range(0, 5):
-        del list[i]
+        del List[i]
 
-    doc = list[0]
-    appl = list[1]
-    note = list[3]
+    doc = List[0]
+    appl = List[1]
+    note = List[3]
     now = page_num
     url = extract_content_url(doc, appl, note, now)
     return url
@@ -105,17 +118,49 @@ def haksa_crawl(html, page_num):
     image_url = extract_content_image(url)
     download_url = extract_content_attach(url)
 
+<<<<<<< HEAD:team10/crawling/crawl/haksaCrawl.py
     dict = {'title': title, 'modify_dt': modify_dt, 'content': content, 'type': "학사공지", 'url': url, 'image_url': image_url,'download_url': download_url}
     return dict
 
 
 def extract_indeed_notices(last_pages):
+=======
+    dict_data = {'title': title, 'modify_dt': modify_dt,
+            'content': content, 'type': "학사공지", 'url': url}
+    return dict_data
+
+
+def loop_extract(notices, page):
+    link = requests.get(
+        f"https://knu.ac.kr/wbbs/wbbs/bbs/btin/stdList.action?btin.page={page}&popupDeco=false&btin.search_type=&btin.search_text=&menu_idx=42")
+    soup = BeautifulSoup(link.text, "html.parser")
+    result = soup.find("table", {"title": "학사 공지사항"})
+    results = result.find_all("tr")
+
+    for result in results[1:]:
+        notice = haksa_crawl(result, page)
+        notices.append(notice)
+        #print(haksa_crawl(result, page))
+        #haksa_crawl(result, page)
+
+
+def extract_indeed_notices():
+    count = 0
+    last_pages = extract_indeed_pages()
+>>>>>>> master:team10/crawler/haksaCrawl.py
     notices = []
 
+<<<<<<< HEAD:team10/crawling/crawl/haksaCrawl.py
     for page in range(1, last_pages + 1):
         link = requests.get(f"https://knu.ac.kr/wbbs/wbbs/bbs/btin/stdList.action?btin.page={page}&popupDeco=false&btin.search_type=&btin.search_text=&menu_idx=42")
+=======
+    for page in range(2, last_pages + 1):
+        count = 0
+        link = requests.get(
+            f"https://knu.ac.kr/wbbs/wbbs/bbs/btin/stdList.action?btin.page={page}&popupDeco=false&btin.search_type=&btin.search_text=&menu_idx=42")
+>>>>>>> master:team10/crawler/haksaCrawl.py
         soup = BeautifulSoup(link.text, "html.parser")
-        result = soup.find("table", {"title":"학사 공지사항"})
+        result = soup.find("table", {"title": "학사 공지사항"})
         results = result.find_all("tr")
 
         for result in results[1:]:
@@ -125,13 +170,15 @@ def extract_indeed_notices(last_pages):
             if (note == "row"):
                 notice = haksa_crawl(result, page)
                 notices.append(notice)
+                count = count + 1
+                print(f"{page - 1}page {count}번 게시물 crawling")
                 #print(haksa_crawl(result, page))
                 #haksa_crawl(result, page)
-
     #print(notices[0])
     return notices
 
 
+<<<<<<< HEAD:team10/crawling/crawl/haksaCrawl.py
 def check_latest(): # latest notice title return
     page = 1
     link = requests.get(f"https://knu.ac.kr/wbbs/wbbs/bbs/btin/stdList.action?btin.page={page}&popupDeco=false&btin.search_type=&btin.search_text=&menu_idx=42")
@@ -139,15 +186,34 @@ def check_latest(): # latest notice title return
     result = soup.find("table", {"title": "학사 공지사항"})
     results = result.find_all("tr")
 
+=======
+# 가장 최근의 게시물의 제목을 str로 return
+def check_latest():
+    page = 1
+    link = requests.get(
+            f"https://knu.ac.kr/wbbs/wbbs/bbs/btin/stdList.action?btin.page={page}&popupDeco=false&btin.search_type=&btin.search_text=&menu_idx=42")
+    soup = BeautifulSoup(link.text, "html.parser")
+    result = soup.find("table", {"title": "학사 공지사항"})
+    results = result.find_all("tr")
+>>>>>>> master:team10/crawler/haksaCrawl.py
     for result in results[1:2]:
         notice = haksa_crawl(result, page)
     return notice['title']
 
+<<<<<<< HEAD:team10/crawling/crawl/haksaCrawl.py
 
 def extract_latest_notices(latest): # 게시물 업데이트
     notices = []
     page = 1
     link = requests.get(f"https://knu.ac.kr/wbbs/wbbs/bbs/btin/stdList.action?btin.page={page}&popupDeco=false&btin.search_type=&btin.search_text=&menu_idx=42")
+=======
+# 게시물 업데이트
+def extract_latest_notices(latest):
+    notices = []
+    page = 1
+    link = requests.get(
+            f"https://knu.ac.kr/wbbs/wbbs/bbs/btin/stdList.action?btin.page={page}&popupDeco=false&btin.search_type=&btin.search_text=&menu_idx=42")
+>>>>>>> master:team10/crawler/haksaCrawl.py
     soup = BeautifulSoup(link.text, "html.parser")
     result = soup.find("table", {"title": "학사 공지사항"})
     results = result.find_all("tr")
