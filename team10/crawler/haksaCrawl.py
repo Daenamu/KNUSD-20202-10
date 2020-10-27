@@ -97,11 +97,11 @@ def extract_content_attach(url): #본문 첨부파일
     for attach_href in attach_hrefs:
         href = attach_href.find("a").attrs["href"]
         attach_href = href[len("javascript:doDownload("):-2]
-        list = attach_href.split(",")
+        List = attach_href.split(",")
 
         for i in range(0,3):
-            li = list[i].strip()
-            list[i] = li[1:-1]
+            li = List[i].strip()
+            List[i] = li[1:-1]
         
         attach_url = f"http://my.knu.ac.kr/stpo/stpo/bbs/btin/downloadServlet.action?appFile.file_nbr={list[2]}&appFile.doc_no={list[0]}&appFile.appl_no={list[1]}&appFile.bbs_cde=812&bbs_cde=812&btin.bbs_cde=812&btin.doc_no={list[0]}&btin.appl_no={list[1]}"
         attach.append(attach_url)
