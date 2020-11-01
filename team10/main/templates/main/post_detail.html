@@ -1,4 +1,6 @@
 {% load static %}
+{% load social_share %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,7 +39,14 @@
         <img src = "{% static 'image/knu_image.jpg' %}" width = "150" height = "50">
         {{ post.department }}
     </h1>   
-     
+    <div class = "container">
+        <button type="button" class="btn btn-light">
+            {% post_to_facebook post.get_absolute_url "Facebook" %}
+        </button>
+        <button type="button" class="btn btn-light">
+            {% post_to_twitter post.get_absolute_url "Twitter" %}
+        </button>
+    </div>
     <br><br>
     <div class = "container">
         <!--게시글-->

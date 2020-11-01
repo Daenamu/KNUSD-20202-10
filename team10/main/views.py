@@ -1,9 +1,11 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from main.models import Post
 
 # Create your views here.
 
+class HomeView(TemplateView):
+    template_name = 'main/home.html'
 
 class PostLV(ListView):
     template_name = 'main/post_list.html'
