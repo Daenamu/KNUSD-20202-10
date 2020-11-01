@@ -1,4 +1,6 @@
 {% load static %}
+{% load social_share %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,7 +39,14 @@
         <img src = "{% static 'image/knu_image.jpg' %}" width = "150" height = "50">
         {{ post.department }}
     </h1>   
-     
+    <div class = "container">
+        <button type="button" class="btn btn-light">
+            {% post_to_facebook post.get_absolute_url "Facebook" %}
+        </button>
+        <button type="button" class="btn btn-light">
+            {% post_to_twitter post.get_absolute_url "Twitter" %}
+        </button>
+    </div>
     <br><br>
     <div class = "container">
         <!--게시글-->
@@ -68,7 +77,7 @@
         <div class = "row text-center">
             <div class= "col">
                 <button type="button" class="btn btn-outline-secondary"><a href="{{ post.get_previous.get_absolute_url }}">이전글</a></button>
-                <button type="button" class="btn btn-outline-secondary">목록</button>
+                <button type="button" class="btn btn-outline-secondary"><a href="{% url 'main:post_list' %}">목록</a></button>
                 <button type="button" class="btn btn-outline-secondary"><a href="{{ post.get_next.get_absolute_url }}">다음글</a></button>
             </div>    
         </div>
