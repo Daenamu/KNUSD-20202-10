@@ -20,16 +20,17 @@
     <!--학과이름-->
     <br>
     <h1>
-        <img src = "{% static 'image/knu_image.jpg' %}" width = "150" height = "50">
-        <!--{{ object.title }}-->
+        <a href="{% url 'main:post_list' %}">
+            <img src = "{% static 'image/knu_image.jpg' %}" width = "150" height = "50">
+        </a>
     </h1>
 
     <br><br>
     <div class = "container">
         <!--검색창-->
         <div style="float: right;">
-            <form class="navbar-search pull-right">
-                <input class="search-query" type="text" placeholder="Search">
+            <form class="navbar-search pull-right" action="" method='GET'>
+                <input class="search-query" type="text" placeholder="Search" name='search_key'>
                 <input class="btn btn-secondary" type="submit" value="검색">
             </form>
         </div>

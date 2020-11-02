@@ -1,0 +1,89 @@
+{% load static %}
+{% load social_share %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학과공지 알리미</title>
+    <link rel = "stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel = "stylesheet" href="{% static 'css/site.css' %}">
+    <link rel="shortcut icon" href="http://www.knu.ac.kr/wbbs/img/favicon.ico"/>
+    <style>
+        h1{
+            font-size: 70px;
+            text-align: center;
+        }
+        th {
+            border-top: 2px solid;
+            border-bottom: 0.5px solid;
+            padding: 10px 5px;
+            border-color: gray;
+            width: 1400px;
+            background-color: rgb(206, 206, 206);
+        }
+        td {
+            border-bottom: 1px solid;
+            padding: 10px 5px;
+            border-color: gray;
+            width: 1400px;
+        }
+    </style> 
+</head>
+
+<body>
+    <!--학과이름-->
+    <br>
+    <h1>
+        <img src = "{% static 'image/knu_image.jpg' %}" width = "150" height = "50">
+        {{ post.department }}
+    </h1>   
+    <div class = "container">
+        <button type="button" class="btn btn-light">
+            {% post_to_facebook post.get_absolute_url "Facebook" %}
+        </button>
+        <button type="button" class="btn btn-light">
+            {% post_to_twitter post.get_absolute_url "Twitter" %}
+        </button>
+    </div>
+    <br><br>
+    <div class = "container">
+        <!--게시글-->
+        <table>
+            <tr>
+                <th>{{ post.title }}</th>
+            </tr>
+            <tr>
+                <td>작성일 {{ post.upload_dt }}</td>
+            </tr>
+            <tr>
+                <td>{{ post.content|linebreaks }}</td>
+            </tr>
+            {% if post.image_url %}
+                <tr>
+                    <td><img src = "{{ post.image_url }}.jpg"></td>
+                </tr>
+            {% endif %}
+            {% if post.download_url %}
+                <tr>
+                    <td><a href="{{ post.download_url }}">{{ post.download_url }}</a></td>
+                </tr>
+            {% endif %}
+        </table>
+        
+        <!--이전/다음글 버튼-->
+        <br>
+        <div class = "row text-center">
+            <div class= "col">
+                <button type="button" class="btn btn-outline-secondary"><a href="{{ post.get_previous.get_absolute_url }}">이전글</a></button>
+                <button type="button" class="btn btn-outline-secondary"><a href="{% url 'main:post_list' %}">목록</a></button>
+                <button type="button" class="btn btn-outline-secondary"><a href="{{ post.get_next.get_absolute_url }}">다음글</a></button>
+            </div>    
+        </div>
+    </div>
+        
+    <script src = "http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type = "text/javascript" src = "{% static 'js/bootstrap.js' %}"></script>
+</body>
+</html>
