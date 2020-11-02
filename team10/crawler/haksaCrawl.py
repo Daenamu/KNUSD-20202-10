@@ -79,9 +79,12 @@ def extract_content_attach(url): #본문 첨부파일
     attach = []
     result = requests.get(url)
     soup = BeautifulSoup(result.text, "html.parser")
-    cont = soup.find("div", {"class": "attach"})
+     try:
+        cont = soup.find("div", {"class": "attach"})
+        attach_hrefs = cont.find_all("li")
 
-    attach_hrefs = cont.find_all("li")
+    except AttributeError as e:
+        return attach
 
     for attach_href in attach_hrefs:
         href = attach_href.find("a").attrs["href"]
