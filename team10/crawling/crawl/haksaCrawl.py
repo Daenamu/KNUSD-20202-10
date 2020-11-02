@@ -79,9 +79,12 @@ def extract_content_attach(url): #본문 첨부파일
     attach = []
     result = requests.get(url)
     soup = BeautifulSoup(result.text, "html.parser")
-    cont = soup.find("div", {"class": "attach"})
+    try:
+        cont = soup.find("div", {"class": "attach"})
+        attach_hrefs = cont.find_all("li")
 
-    attach_hrefs = cont.find_all("li")
+    except AttributeError as e:
+        return attach
 
     for attach_href in attach_hrefs:
         href = attach_href.find("a").attrs["href"]
@@ -130,6 +133,7 @@ def extract_indeed_notices(last_pages):
                 notices.append(notice)
                 count = count + 1
                 print(f"{page - 1}page {count}번 게시물 crawling")
+                #print(notice)
                 #print(haksa_crawl(result, page))
                 #haksa_crawl(result, page)
     #print(notices[0])
@@ -143,8 +147,12 @@ def check_latest(): # latest notice title return
     result = soup.find("table", {"title": "학사 공지사항"})
     results = result.find_all("tr")
 
-    for result in results[1:2]:
-        notice = haksa_crawl(result, page)
+    for result in results[1:]:
+        note = find_notice_note_div(result)
+        if (note == "row"):
+            notice = haksa_crawl(result, page)
+            break
+
     return notice['title']
 
 
