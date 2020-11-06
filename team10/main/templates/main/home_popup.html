@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판 추가</title>
+    <link rel = "stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel = "stylesheet" href="{% static 'css/site.css' %}">
+    <link rel="shortcut icon" href="http://www.knu.ac.kr/wbbs/img/favicon.ico"/>
+</head>
+<body>
+    <table class = "table table-striped">
+        <thead> 
+            <tr> 
+                <th>게시판 리스트</th>
+                <th>추가</th>
+            </tr>
+        </thead> 
+        <tbody> 
+            {% for post in object_list %}
+            <tr> 
+                <td>{{ post.department }}</td> 
+                <td><button type = "button" class = "btn btn-secondary">선택</button></td>> 
+            </tr> 
+            {% endfor %} 
+        </tbody>     
+    </table>
+</body>
+</html>
