@@ -2,61 +2,114 @@ import requests
 from bs4 import BeautifulSoup
 # 국어국문학과 공지 crawl
 
-URL = "http://korean.knu.ac.kr"
+PAGE = 1
+URL = f"http://korean.knu.ac.kr/bbs/board.php?bo_table=community01&page={PAGE}"
 
-def korean_newnotice_crawl(URL):
-    req = requests.get(URL)
-    html = req.text
-    soup = BeautifulSoup(html,'html.parser')
-    checklist = []
-    noticesCrop = soup.find("div",{"class": "notice"})
-    noticeList = noticesCrop.find_all("li")
-    for notice in noticeList: #최신 게시물들을 크롤링
-        korean_crawl(notice)
-        
-def korean_crawl(notice):
-    title = notice.find("a").get_text()
-    herf = notice.find("a").get("href")
-    content = extract_content_txt(herf)
-    image_url = extract_content_image(herf)
-    download_url = extract_content_attach(herf)
-    modify_dt = extract_content_date(herf)
-    dict = {'title': title, 'modify_dt': modify_dt, 'content': content, 'type': "학사공지", 'url': herf, 'image_url': image_url,'download_url': download_url}
-    return dict
+def extract_last_pages():
+  result = requests.get(URL)
+  soup = BeautifulSoup(result.text, "html.parser")
 
-def extract_content_txt(url):
-    req = requests.get(url)
-    html = req.text
-    soup = BeautifulSoup(html,'html.parser')
-    contents = soup.find("div",{"id" : "bo_v_con"}).get_text()
-    return content
+  pag = soup.find("span",{"class":"pg"})
+  link = pag.find("a",{"class":"pg_page pg_end"}).attrs["href"]
+  last_page = int(link[-2:])
+  return last_page
+
+def extract_content_text(url):
+  result = requests.get(url)
+  soup = BeautifulSoup(result.text, "html.parser")
+  cont_text = soup.find("div",{"id":"bo_v_con"}).text
+  return cont_text
 
 def extract_content_image(url):
-    req = requests.get(url)
-    html = req.text
-    soup = BeautifulSoup(html,'html.parser')
-    cont = soup.find("div",{"id" : "bo_v_img"})
-    image = cont.find("img").get("src")
-    filename = image[-4:]
-    return image
+  images = []
+  result = requests.get(url)
+  soup = BeautifulSoup(result.text,"html.parser")
+  cont = soup.find("div",{"id":"bo_v_img"})
+  imgs = cont.find_all("img")
+
+  for img in imgs:
+    if img != None:
+      img = img.attrs["src"]
+      images.append(img)
+  return images
 
 def extract_content_attach(url):
-    req = requests.get(url)
-    html = req.text
-    soup = BeautifulSoup(html,'html.parser')
-    cont = soup.find("section",{"id": "bo_v_file"})
-    downloadlink = cont.find("a")["href"]
-    fname = cont.find("a").get_text(strip=True)
-    fname = fname.split(".")
-    filename = "."+fname[1][:3]
-    return downloadlink
+  attach = []
+  result = requests.get(url)
+  soup = BeautifulSoup(result.text,"html.parser")
+  cont = soup.find("section",{"id":"bo_v_file"})
+  if cont != None:
+    attach_hrefs = cont.find_all("li")
+    for attach_href in attach_hrefs:
+     href = attach_href.find("a").attrs["href"]
+     attach.append(href)
+  return attach
+    
 
-def extract_content_date(url):
-    req = requests.get(url)
-    html = req.text
-    soup = BeautifulSoup(html,'html.parser')
-    cont = soup.find("section",{"id": "bo_v_file"})
-    dte = cont.find_all("span")
-    date = date[1].get_text()[7:]
-    return date
+def korean_crawl(html,url):
+  title = html.find("h1",{"id":"bo_v_title"}).string.strip()
+  modify_dt = html.find_all("strong")[1].string
+  content = extract_content_text(url)
+  image_url = extract_content_image(url)
+  download_url = extract_content_attach(url)
 
+  dict_data = {'title':title, 'modify_dt':modify_dt, 'content':content, 'type':"국어국문학과", 'url':url, 'image_url':image_url, 'download_url':download_url}
+  return dict_data
+
+
+def extract_korean_notices(last_pages):
+  notices = []
+  count = 0
+
+  for page in range(1,last_pages+1):
+    link = requests.get(f"http://korean.knu.ac.kr/bbs/board.php?bo_table=community01&page={page}")
+    soup = BeautifulSoup(link.text, "html.parser")
+    results = soup.find_all("td",{"class":"td_subject"})
+
+    for result in results:
+      url = result.find("a").attrs["href"]
+      re = requests.get(url)
+      sop = BeautifulSoup(re.text,"html.parser")
+      notice = korean_crawl(sop,url)
+      notices.append(notice)
+      count = count + 1
+      print(f"{page}page {count}번 게시물 crawling")
+  
+  return notices 
+
+def check_latest():
+  page = 1
+  link = requests.get(f"http://korean.knu.ac.kr/bbs/board.php?bo_table=community01&page={page}")
+  soup = BeautifulSoup(link.text, "html.parser")
+  results = soup.find_all("td",{"class":"td_subject"})
+  tops = soup.find_all("td",{"class":"bo_notice"})
+  for result in results:
+      for top in tops:
+          if(result != top):
+              late = result
+          
+  url = late.find("a").attrs["href"]
+  re = requests.get(url)
+  sop = BeautifulSoup(re.text,"html.parser")
+  notice = korean_crawl(sop,url)
+
+  return notice['title']
+
+def extract_latest_notices(latest):
+  notices = []
+  page = 1
+  link = requests.get(f"http://korean.knu.ac.kr/bbs/board.php?bo_table=community01&page={page}")
+  soup = BeautifulSoup(link.text, "html.parser")
+  results = soup.find_all("td",{"class":"td_subject"})
+
+  if results != None:
+    for result in results:
+      url = result.find("a").attrs["href"]
+      re = requests.get(url)
+      sop = BeautifulSoup(re.text,"html.parser")
+      notice = korean_crawl(sop,url)
+      if notice['title'] == latest:
+        break
+      notices.append(notice)
+  
+  return notices
