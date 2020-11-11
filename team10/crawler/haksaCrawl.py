@@ -137,16 +137,12 @@ def extract_indeed_notices(last_pages):
 
         for result in results[1:]:
             note = find_notice_note_div(result)
-            #print(note)
-            #print(len(note))
             if (note == "row"):
                 notice = haksa_crawl(result, page)
                 notices.append(notice)
                 count = count + 1
                 print(f"{page - 1}page {count}번 게시물 crawling")
                 #print(notice)
-                #print(haksa_crawl(result, page))
-                #haksa_crawl(result, page)
     #print(notices[0])
     return notices
 

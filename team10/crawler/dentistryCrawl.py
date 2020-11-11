@@ -135,7 +135,7 @@ def dent_extract_indeed_notices(last_pages):
             count = count + 1
             notice = dentistry_crawl(notice_url)
             print(f"{page - 1}page {count}번 게시물 crawling")
-            print(notice)
+            #print(notice)
             notices.append(notice)
     return notices
 
