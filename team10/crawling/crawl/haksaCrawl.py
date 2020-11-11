@@ -84,18 +84,11 @@ def extract_content_attach(url): #본문 첨부파일
     extension = [] # 첨부파일 확장자
     result = requests.get(url)
     soup = BeautifulSoup(result.text, "html.parser")
-<<<<<<< HEAD:team10/crawling/crawl/haksaCrawl.py
 
     try:
         cont = soup.find("div", {"class": "attach"})
         attach_hrefs = cont.find_all("li")
 
-=======
-     try:
-        cont = soup.find("div", {"class": "attach"})
-        attach_hrefs = cont.find_all("li")
-
->>>>>>> master:team10/crawler/haksaCrawl.py
     except AttributeError as e:
         return attach
 
