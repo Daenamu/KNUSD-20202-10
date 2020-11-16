@@ -46,8 +46,10 @@
     <!--학과이름-->
     <br>
     <h1>
-        <img src = "{% static 'image/knu_image.jpg' %}" width = "150" height = "50">
-        {{ post.department }}
+        <a href="{% url 'main:post_list' %}">
+            <img src = "{% static 'image/knu_image.jpg' %}" width = "150" height = "50">
+            {{ post.department }}
+        </a>
     </h1>   
     
     <div class = "container">

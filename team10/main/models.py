@@ -3,6 +3,22 @@ from django.urls import reverse
 
 # Create your models here.
 
+class MajorList(models.Model):
+    major = models.CharField(max_length=20, default=0)
+
+    class Meta:
+        db_table = "major_list"
+
+class SocialPlatform(models.Model):
+    platform = models.CharField(max_length=20, default=0)
+
+    class Meta:
+        db_table = "social_platform"
+
+class User(models.Model):
+    social = models.ForeignKey(SocialPlatform, on_delete=models.CASCADE, max_length=20, blank=True, default=1)
+    social_login_id = models.CharField(max_length=50, blank=True)
+    
 
 class Post(models.Model):
     title = models.CharField(verbose_name='TITLE', max_length=100)

@@ -79,7 +79,7 @@ def extract_content_attach(url): #본문 첨부파일
     attach = []
     result = requests.get(url)
     soup = BeautifulSoup(result.text, "html.parser")
-     try:
+    try:
         cont = soup.find("div", {"class": "attach"})
         attach_hrefs = cont.find_all("li")
 
@@ -164,5 +164,6 @@ def extract_latest_notices(latest): # 게시물 업데이트
         if notice['title'] == latest: 
             break
         notices.append(notice)
+        print("...")
 
     return notices

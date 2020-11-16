@@ -1,11 +1,67 @@
-from django.shortcuts import render
+import json
+import jwt
+import requests
+from django.views import View
+from django.http import JsonResponse, HttpResponse
+
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, TemplateView
-from main.models import Post
+from main.models import Post, User, SocialPlatform
+from knu_reminder import secret
 
 # Create your views here.
 
+class KakaoLoginView(View):
+    def get(self, request):
+        kakao_access_code = request.GET.get('code', None)
+        url = 'https://kauth.kakao.com/oauth/token'
+        headers = {'Content-type' : 'application/x-www-form-urlencoded; charset=utf-8'}
+        body = {'grant_type' : 'authorization_code',
+                'client_id' : secret.App_key,
+                'redirect_uri' : secret.Redirect_URI,
+                'code': kakao_access_code }
+        
+        token_kakao_response = requests.post(url, headers=headers, data=body)
+        access_token = json.loads(token_kakao_response.text).get('access_token')
+
+        url = 'https://kapi.kakao.com/v2/user/me'
+        headers = {
+            'Authorization' : f'Bearer {access_token}',
+            'Content-type' : 'application/x-www-form-urlencoded; charset=utf-8'
+        }
+        kakao_response = requests.get(url, headers=headers)
+        kakao_response = json.loads(kakao_response.text)
+        kakao = SocialPlatform.objects.get(platform='kakao')
+
+        if User.objects.filter(social_login_id = kakao_response['id']).exists():
+            user = User.objects.get(social_login_id=kakao_response['id'])
+            jwt_token = jwt.encode({'id':user.id}, secret.SECRET_KEY, algorithm='HS256').decode('utf-8')
+            print('user logged in')
+            return redirect('main:home')
+        
+        User(
+            social_login_id = kakao_response['id'],
+            social = kakao,
+        ).save()
+
+        print('user saved')
+
+        user = User.objects.get(social = kakao, social_login_id=kakao_response['id'])
+        marpple_token = jwt.encode({'id':user.id}, secret.SECRET_KEY, algorithm='HS256').decode('utf-8')
+
+        return redirect('main:home')
+
+class PopupView(TemplateView):
+    template_name = 'main/home_popup.html'
+
 class HomeView(TemplateView):
     template_name = 'main/home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['app_key'] = secret.App_key
+        context['redirect_uri'] = secret.Redirect_URI
+        return context
 
 class PostLV(ListView):
     template_name = 'main/post_list.html'

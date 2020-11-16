@@ -1,5 +1,5 @@
 from django.contrib import admin
-from main.models import Post
+from main.models import Post, SocialPlatform, MajorList, User
 # Register your models here.
 
 
@@ -10,3 +10,15 @@ class PostAdmin(admin.ModelAdmin):
     list_filter = ('upload_dt', )
     search_fields = ('title', 'content', 'slug')
     prepopulated_fields = {'slug': ('title', )}
+
+@admin.register(SocialPlatform)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ('id', 'platform')
+
+@admin.register(MajorList)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ('id', 'major')
+    
+@admin.register(User)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ('id', 'social_login_id')
