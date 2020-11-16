@@ -29,17 +29,7 @@
             border-color: gray;
             width: 1400px;
         }
-        .sns-go {
-            text-align:right; padding: 20px 0;
-        }
-        .sns-go li {
-            display:inline-block; margin: 0 5px; 
-        }
-        .sns-go li img {
-            border-radius:50%;
-        }
-    </style>
-
+    </style> 
 </head>
 
 <body>
@@ -51,29 +41,16 @@
             {{ post.department }}
         </a>
     </h1>   
-    
     <div class = "container">
-        <div class="sns-go">
-            <ul>
-                <!--북마크-->
-                <li>
-                    <a href="#"><img src="{% static 'image/bookmark.png' %}" width="40" alt="카카오톡 공유하기"></a>
-                </li>
-                <!--페이스북-->
-                <li>
-                    <a href="#" onclick="javascript:window.open('https://www.facebook.com/sharer/sharer.php?u=' +encodeURIComponent(document.URL)+'&t='+encodeURIComponent(document.title), 'facebooksharedialog', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;" target="_blank" alt="Share on Facebook" ><img src="{% static 'image/sns_face.png' %}" width="40" alt="페이스북 공유하기"></a>
-                </li>	
-                <!--트위터-->
-                <li>
-                    <a href="#" onclick="javascript:window.open('https://twitter.com/intent/tweet?text=[%EA%B3%B5%EC%9C%A0]%20' +encodeURIComponent(document.URL)+'%20-%20'+encodeURIComponent(document.title), 'twittersharedialog', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;" target="_blank" alt="Share on Twitter" ><img src="{% static 'image/sns_tw.png' %}" width="40" alt="트위터 공유하기"></a>
-                </li>
-                <!--카카오톡-->
-                <li>
-                    <a href="#"><img src="{% static 'image/sns_ka.png' %}" width="40" alt="카카오톡 공유하기"></a>
-                </li>
-            </ul>
-        </div>
-
+        <button type="button" class="btn btn-light">
+            {% post_to_facebook post.get_absolute_url "Facebook" %}
+        </button>
+        <button type="button" class="btn btn-light">
+            {% post_to_twitter post.get_absolute_url "Twitter" %}
+        </button>
+    </div>
+    <br><br>
+    <div class = "container">
         <!--게시글-->
         <table>
             <tr>
@@ -109,6 +86,6 @@
     </div>
         
     <script src = "http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script type = "text/javascript" src = "js/bootstrap.js"></script>
+    <script type = "text/javascript" src = "{% static 'js/bootstrap.js' %}"></script>
 </body>
 </html>

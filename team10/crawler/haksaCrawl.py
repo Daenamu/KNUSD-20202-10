@@ -3,7 +3,6 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-'''학사공지 crawl'''
 
 PAGE = 1
 URL = f"https://knu.ac.kr/wbbs/wbbs/bbs/btin/stdList.action?btin.page={PAGE}&popupDeco=false&btin.search_type=&btin.search_text=&menu_idx=42"
@@ -65,18 +64,24 @@ def extract_content_text(url):
 
 def extract_content_image(url): # 본문 이미지
     images = []
+    extension = [] # 본문 이미지 파일 확장자
     result = requests.get(url)
     soup = BeautifulSoup(result.text, "html.parser")
     cont = soup.find("div", {"class": "board_cont"})
-    image = cont.find_all("img")
+    imgs = cont.find_all("img")
 
-    for img in image:
+    for img in imgs:
         src = img.attrs["src"]
+        alt = img.attrs["alt"]
+        alt = alt[-3:]
         images.append(src)
+        extension.append(alt)
+
     return images
 
 def extract_content_attach(url): #본문 첨부파일
     attach = []
+    extension = [] # 첨부파일 확장자
     result = requests.get(url)
     soup = BeautifulSoup(result.text, "html.parser")
     try:
@@ -87,6 +92,10 @@ def extract_content_attach(url): #본문 첨부파일
         return attach
 
     for attach_href in attach_hrefs:
+        attach_extension = attach_href.find("a")
+        attach_extension = attach_extension.get_text()
+        attach_extension = attach_extension[-3:]
+
         href = attach_href.find("a").attrs["href"]
         attach_href = href[len("javascript:doDownload("):-2]
         List = attach_href.split(",")
@@ -97,7 +106,8 @@ def extract_content_attach(url): #본문 첨부파일
         
         attach_url = f"http://my.knu.ac.kr/stpo/stpo/bbs/btin/downloadServlet.action?appFile.file_nbr={List[2]}&appFile.doc_no={List[0]}&appFile.appl_no={List[1]}&appFile.bbs_cde=812&bbs_cde=812&btin.bbs_cde=812&btin.doc_no={List[0]}&btin.appl_no={List[1]}"
         attach.append(attach_url)
-    
+        extension.append(attach_extension)
+
     return attach
 
 def haksa_crawl(html, page_num):
@@ -126,15 +136,12 @@ def extract_indeed_notices(last_pages):
 
         for result in results[1:]:
             note = find_notice_note_div(result)
-            #print(note)
-            #print(len(note))
             if (note == "row"):
                 notice = haksa_crawl(result, page)
                 notices.append(notice)
                 count = count + 1
                 print(f"{page - 1}page {count}번 게시물 crawling")
-                #print(haksa_crawl(result, page))
-                #haksa_crawl(result, page)
+                #print(notice)
     #print(notices[0])
     return notices
 
@@ -146,8 +153,12 @@ def check_latest(): # latest notice title return
     result = soup.find("table", {"title": "학사 공지사항"})
     results = result.find_all("tr")
 
-    for result in results[1:2]:
-        notice = haksa_crawl(result, page)
+    for result in results[1:]:
+        note = find_notice_note_div(result)
+        if (note == "row"):
+            notice = haksa_crawl(result, page)
+            break
+
     return notice['title']
 
 
