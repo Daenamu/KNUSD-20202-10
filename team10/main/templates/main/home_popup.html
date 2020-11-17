@@ -29,10 +29,10 @@
                 {% for department in departments %}
                 <tr> 
                     <td>{{ department.major }}</td> 
-                    <td><input type ="checkbox" name="department" value="{{ department.major }}" class="btn btn-secondary"> 선택</button></td>> 
+                    <td><input type ="checkbox" name="department[]" value="{{ department.major }}" class="btn btn-secondary"> 선택</button></td>> 
                 </tr> 
                 {% endfor %}
-                <label>게시판 이름 <input type="text" name="board_name", size="20"></label>
+                <label>게시판 이름 <input type="text" name="board_name", size="20" required></label>
                 <input type="submit" value="게시판 생성" class="btn btn-secondary" >
             </form>
         </tbody>     

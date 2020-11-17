@@ -8,18 +8,16 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, TemplateView
 from main.models import Post, User, MajorList, BoardList
 from knu_reminder import secret
+from django.db.models import Q
 
 # Create your views here.
 
-class BoardView(ListView):
-    template_name = 'main/post_list.html'
-    model = Post
-    paginate_by = 20
-
+def DeleteBoardView(request):
+    BoardList.objects.get(board_name=request.GET['board_name'], user=request.user).delete()
+    return redirect('main:home')
 
 def CreateBoardView(request):
-    print(request.POST['department'])
-    BoardList(board_name=request.POST['board_name'], department=json.dumps(request.POST['department']), user=request.user).save()
+    BoardList(board_name=request.POST['board_name'], department=json.dumps(request.POST.getlist('department[]')), user=request.user).save()
     return HttpResponse('<script type="text/javascript">window.close()</script>')  
 
 def KakaoLogoutView(request):
@@ -83,7 +81,7 @@ class HomeView(TemplateView):
         context['app_key'] = secret.App_key
         context['redirect_uri'] = secret.Redirect_URI
 
-        if self.request.user is not None:
+        if self.request.user.is_authenticated:
             boards = BoardList.objects.filter(user=self.request.user)
         else:
             boards = []
@@ -98,10 +96,35 @@ class PostLV(ListView):
 
     def get_queryset(self):
         try:
-            search_key = self.request.GET['search_key']
-            return Post.objects.filter(title__icontains=search_key)
+            board = BoardList.objects.get(user=self.request.user, board_name=self.request.GET['board_name'])
+            jsonDec = json.decoder.JSONDecoder()
+            departments = jsonDec.decode(board.department)
+            print(departments)
+
+            try:
+                search_key = self.request.GET['search_key']
+                return Post.objects.filter(Q(title__icontains=search_key) | Q(deparment__contains=departments))
+            except:
+                return Post.objects.filter(department__contains=departments)
         except:
-            return Post.objects.all()
+            try:
+                search_key = self.request.GET['search_key']
+                return Post.objects.filter(title__icontains=search_key)
+            except:
+                return Post.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            board = BoardList.objects.get(user=self.request.user, board_name=self.request.GET['board_name'])
+            jsonDec = json.decoder.JSONDecoder()
+            departments = jsonDec.decode(board.department)
+            context['departments'] = departments
+            context['board_name'] = board.board_name
+            return context
+        except:
+            context['board_name'] = "전체 공지"
+            return context
 
 class PostDV(DetailView):
     template_name = 'main/post_detail.html'

@@ -17,7 +17,12 @@
 
 </head>
 <body>
-    <!--학과이름-->
+    <!--게시판이름-->
+    {{ board_name }}
+    <!--학과 리스트-->
+    {% for department in departments %}
+        {{ department }}
+    {% endfor %}
     <br>
     <h1>
         <a href="{% url 'main:home' %}">
@@ -31,6 +36,7 @@
         <div style="float: right;">
             <form class="navbar-search pull-right" action="" method='GET'>
                 <input class="search-query" type="text" placeholder="Search" name='search_key'>
+                <input type="text" name="board_name" value='{{ board_name }}' style="display:none">
                 <input class="btn btn-secondary" type="submit" value="검색">
             </form>
         </div>
