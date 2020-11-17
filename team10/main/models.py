@@ -17,6 +17,14 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = 'id'
     REQUIRED_FIELDS = ['social', 'social_login_id']
 
+class Bookmark(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ManyToManyField('Post', blank=True)
+
+class BoardList(models.Model):
+    board_name = models.CharField(verbose_name='NAME', max_length=50)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    department = models.CharField('Department', max_length=50)
     
 class Post(models.Model):
     title = models.CharField(verbose_name='TITLE', max_length=100)

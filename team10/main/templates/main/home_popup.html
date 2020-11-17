@@ -8,6 +8,11 @@
     <link rel = "stylesheet" href="{% static 'css/bootstrap.css' %}">
     <link rel = "stylesheet" href="{% static 'css/site.css' %}">
     <link rel="shortcut icon" href="http://www.knu.ac.kr/wbbs/img/favicon.ico"/>
+    <script language = "javascript">
+        function closePopup() {
+            close();
+        }
+    </script>
 </head>
 <body>
     <table class = "table table-striped">
@@ -18,12 +23,18 @@
             </tr>
         </thead> 
         <tbody> 
-            <!-- {% for post in object_list %} -->
-            <tr> 
-                <td><!-- {{ post.department }} --></td> 
-                <td><button type = "button" class = "btn btn-secondary">선택</button></td>> 
-            </tr> 
-            <!-- {% endfor %} --> 
+            
+            <form method="post" action="{% url 'main:create_board' %}">
+                {% csrf_token %}
+                {% for department in departments %}
+                <tr> 
+                    <td>{{ department.major }}</td> 
+                    <td><input type ="checkbox" name="department" value="{{ department.major }}" class="btn btn-secondary"> 선택</button></td>> 
+                </tr> 
+                {% endfor %}
+                <label>게시판 이름 <input type="text" name="board_name", size="20"></label>
+                <input type="submit" value="게시판 생성" class="btn btn-secondary" >
+            </form>
         </tbody>     
     </table>
 </body>

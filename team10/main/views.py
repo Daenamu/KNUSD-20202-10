@@ -6,10 +6,15 @@ from django.http import JsonResponse, HttpResponse
 from django.contrib import auth
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, TemplateView
-from main.models import Post, User
+from main.models import Post, User, MajorList, BoardList
 from knu_reminder import secret
 
 # Create your views here.
+
+def CreateBoardView(request):
+    print(request.POST)
+    BoardList(board_name=request.POST['board_name'], department=request.POST['department'], user=request.user).save()
+    return HttpResponse('<script type="text/javascript">window.close()</script>')  
 
 def KakaoLogoutView(request):
     auth.logout(request)
@@ -57,6 +62,12 @@ class KakaoLoginView(View):
 
 class PopupView(TemplateView):
     template_name = 'main/home_popup.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        major_list = MajorList.objects.all()
+        context['departments'] = major_list
+        return context
 
 class HomeView(TemplateView):
     template_name = 'main/home.html'
