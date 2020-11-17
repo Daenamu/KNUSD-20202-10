@@ -103,9 +103,9 @@ class PostLV(ListView):
 
             try:
                 search_key = self.request.GET['search_key']
-                return Post.objects.filter(Q(title__icontains=search_key) | Q(deparment__contains=departments))
+                return Post.objects.filter(Q(title__icontains=search_key) | Q(deparment__in=departments))
             except:
-                return Post.objects.filter(department__contains=departments)
+                return Post.objects.filter(department__in=departments)
         except:
             try:
                 search_key = self.request.GET['search_key']
