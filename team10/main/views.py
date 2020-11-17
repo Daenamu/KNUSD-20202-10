@@ -11,9 +11,15 @@ from knu_reminder import secret
 
 # Create your views here.
 
+class BoardView(ListView):
+    template_name = 'main/post_list.html'
+    model = Post
+    paginate_by = 20
+
+
 def CreateBoardView(request):
-    print(request.POST)
-    BoardList(board_name=request.POST['board_name'], department=request.POST['department'], user=request.user).save()
+    print(request.POST['department'])
+    BoardList(board_name=request.POST['board_name'], department=json.dumps(request.POST['department']), user=request.user).save()
     return HttpResponse('<script type="text/javascript">window.close()</script>')  
 
 def KakaoLogoutView(request):
@@ -76,6 +82,13 @@ class HomeView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['app_key'] = secret.App_key
         context['redirect_uri'] = secret.Redirect_URI
+
+        if self.request.user is not None:
+            boards = BoardList.objects.filter(user=self.request.user)
+        else:
+            boards = []
+        context['boards'] = boards
+
         return context
 
 class PostLV(ListView):

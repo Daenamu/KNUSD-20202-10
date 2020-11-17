@@ -21,7 +21,7 @@
     </style>
     <script language = "javascript">
         function showPopup() {
-            window.open("{% url 'main:board' %}", "게시판 추가", "width = 500, height = 800, left = 700, top = 100");
+            window.open("{% url 'main:board_create' %}", "게시판 추가", "width = 500, height = 800, left = 700, top = 100");
         }
     </script>
 </head>
@@ -67,12 +67,11 @@
                     <tr>
                         <td><a href="">북마크 공지사항</a></td>
                     </tr>
-                    <tr>
-                        <td><a href="">학사 공지사항</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="">학부 공지사항</a></td>
-                    </tr>
+                    {% for board in boards %}
+                        <tr>
+                            <td><a href="">{{ board.board_name }}</a></td>
+                        </tr>
+                    {% endfor %}
                 {% endif %}
             </tbody>
         </table>
