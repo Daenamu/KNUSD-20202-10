@@ -3,13 +3,18 @@ import jwt
 import requests
 from django.views import View
 from django.http import JsonResponse, HttpResponse
-
+from django.contrib import auth
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, TemplateView
-from main.models import Post, User, SocialPlatform
+from main.models import Post, User
 from knu_reminder import secret
 
 # Create your views here.
+
+def KakaoLogoutView(request):
+    auth.logout(request)
+    print("logout")
+    return redirect('main:home')
 
 class KakaoLoginView(View):
     def get(self, request):
@@ -31,24 +36,23 @@ class KakaoLoginView(View):
         }
         kakao_response = requests.get(url, headers=headers)
         kakao_response = json.loads(kakao_response.text)
-        kakao = SocialPlatform.objects.get(platform='kakao')
 
         if User.objects.filter(social_login_id = kakao_response['id']).exists():
             user = User.objects.get(social_login_id=kakao_response['id'])
-            jwt_token = jwt.encode({'id':user.id}, secret.SECRET_KEY, algorithm='HS256').decode('utf-8')
+            # jwt_token = jwt.encode({'id':user.id}, secret.SECRET_KEY, algorithm='HS256').decode('utf-8')
             print('user logged in')
+            auth.login(request,user)
+
             return redirect('main:home')
         
         User(
             social_login_id = kakao_response['id'],
-            social = kakao,
+            social = 'kakao',
         ).save()
-
+        user = User.objects.get(social_login_id=kakao_response['id'])
+        auth.login(request, user)
         print('user saved')
-
-        user = User.objects.get(social = kakao, social_login_id=kakao_response['id'])
-        marpple_token = jwt.encode({'id':user.id}, secret.SECRET_KEY, algorithm='HS256').decode('utf-8')
-
+        
         return redirect('main:home')
 
 class PopupView(TemplateView):

@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import AbstractBaseUser
 
 # Create your models here.
 
@@ -9,17 +10,14 @@ class MajorList(models.Model):
     class Meta:
         db_table = "major_list"
 
-class SocialPlatform(models.Model):
-    platform = models.CharField(max_length=20, default=0)
-
-    class Meta:
-        db_table = "social_platform"
-
-class User(models.Model):
-    social = models.ForeignKey(SocialPlatform, on_delete=models.CASCADE, max_length=20, blank=True, default=1)
+class User(AbstractBaseUser):
+    social = models.CharField(max_length=20, blank=True)
     social_login_id = models.CharField(max_length=50, blank=True)
-    
 
+    USERNAME_FIELD = 'id'
+    REQUIRED_FIELDS = ['social', 'social_login_id']
+
+    
 class Post(models.Model):
     title = models.CharField(verbose_name='TITLE', max_length=100)
     slug = models.SlugField('SLUG', allow_unicode=True,
