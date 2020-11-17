@@ -19,7 +19,7 @@ _장고 가상환경 설정_
 5. `pip install django` : 파이썬 가상 환경에 장고 설치 
 6. `pip install 패키지이름` : 그 외 패키지 설치 _// pip list 로 패키지 리스트 확인_
 
-    - 패키지: requests, bs4, django-social-share
+    - 패키지: requests, bs4, django-social-share, PyJWT
 
 _번외: 버전 관리_
 1. `pip install -U pip setuptools wheel` : 패키지 툴 업그레이드
