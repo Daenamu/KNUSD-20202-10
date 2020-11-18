@@ -25,6 +25,7 @@ class BoardList(models.Model):
     board_name = models.CharField(verbose_name='NAME', max_length=50)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     department = models.TextField('Department', null=True)
+    alarm = models.BooleanField(default=False)
     
 class Post(models.Model):
     title = models.CharField(verbose_name='TITLE', max_length=100)

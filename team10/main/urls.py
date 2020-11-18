@@ -13,4 +13,5 @@ urlpatterns = [
     path('create_board/', views.CreateBoardView, name='create_board'),
     path('delete_board/', views.DeleteBoardView, name='board_delete'),
     path('bookmark/', views.BookmarkView, name='bookmark'),
+    path('alarm/', views.AlarmView, name='alarm'),
 ]

@@ -12,6 +12,20 @@ from django.db.models import Q
 
 # Create your views here.
 
+def AlarmView(request):
+    board_name = request.POST.get('board_name', None)
+    board = BoardList.objects.get(user=request.user, board_name=board_name)
+    if board.alarm:
+        board.alarm = False
+        result = False
+    else:
+        board.alarm = True
+        result = True
+    board.save()
+    context = {'result':result}
+    return HttpResponse(json.dumps(context), content_type="application/json")
+    
+
 def BookmarkView(request):
     pk = str(request.POST.get('pk', None))
     bookmark = Bookmark.objects.get(user=request.user)
