@@ -22,9 +22,11 @@ def BookmarkView(request):
         if pk not in ids:
             ids.append(pk)
             message = "북마크 완료"
+            result = True
         else:
             ids.remove(pk)
             message = "북마크 삭제 완료"
+            result = False
         bookmark.post = json.dumps(ids)
         bookmark.save()
     except:
@@ -33,8 +35,9 @@ def BookmarkView(request):
         bookmark.post = json.dumps(ids)
         message = "북마크 완료"
         bookmark.save()
+        result = True
 
-    context = {'message': message}
+    context = {'message': message, 'result':result}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 def DeleteBoardView(request):
@@ -176,6 +179,18 @@ class PostDV(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        bookmark = Bookmark.objects.get(user=self.request.user)
+        jsonDec = json.decoder.JSONDecoder()
+        try:
+            ids = jsonDec.decode(bookmark.post)
+        except:
+            ids = []
+
+        if str(kwargs['object'].id) in ids:
+            context['is_bookmark'] = True
+        else:
+            context['is_bookmark'] = False
         try:
             context['board_name'] = self.request.GET['board_name']
             return context
