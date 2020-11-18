@@ -48,8 +48,6 @@
           dataType: "json", 
           // 서버측에서 전송한 Response 데이터 형식 (json)
           success: function(response){ // 통신 성공시 - 북마크 버튼 칠하기
-            alert(response.message);
-            
             if (response.result) {
                 $('#bookmark').replaceWith( '<i class="fas fa-bookmark" id="bookmark"></i>' );
             }
@@ -60,7 +58,6 @@
           },
           error: function(request, status, error){ // 통신 실패시 - alert
             alert("북마크 실패하였습니다.")
-            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
           },
         });
       })
@@ -82,6 +79,9 @@
         </button>
         <button type="button" class="btn btn-light">
             {% post_to_twitter post.get_absolute_url "Twitter" %}
+        </button>
+        <button type="button" class="btn btn-light">
+            <a href="">카카오톡 공유</a>
         </button>
         <button type="button" class="bookmark" name='{{ post.id }}'>
             {% if is_bookmark %}
