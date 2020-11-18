@@ -69,8 +69,41 @@ def DeleteBoardView(request):
     return redirect('main:home')
 
 def CreateBoardView(request):
-    BoardList(board_name=request.POST['board_name'], department=json.dumps(request.POST.getlist('department[]')), user=request.user).save()
-    return HttpResponse('<script type="text/javascript">window.close()</script>')  
+    try: 
+        BoardList.objects.get(board_name=request.POST['board_name'])
+        return redirect('main:popup')
+    except:
+        BoardList(board_name=request.POST['board_name'], department=json.dumps(request.POST.getlist('department[]')), user=request.user).save()
+        return HttpResponse('<script type="text/javascript">window.close()</script>')  
+
+def ShareView(request):
+    id = request.POST.get('pk', None)
+    post = Post.objects.get(id=id)
+    print(post.title)
+
+    ACCESS_TOKEN = request.user.token
+
+    url = 'https://kapi.kakao.com/v2/api/talk/memo/default/send'
+    headers = {
+        "Authorization": f"Bearer {ACCESS_TOKEN}"
+    }
+    body = {
+        'template_object' : json.dumps({ 
+            "object_type" : "text",
+            "text" : "Hello, world!",
+            "link" : {
+                "web_url" : "www.naver.com"
+            }
+        })
+    }
+    response = requests.post(url, headers=headers, data=body)
+    context = {'success':response.status_code}
+    return HttpResponse(json.dumps(context), content_type="application/json")
+
+def KakaoDeleteView(request):
+    user = User.objects.get(id=request.user.id)
+    user.delete()
+    return redirect('main:home')
 
 def KakaoLogoutView(request):
     auth.logout(request)
@@ -89,6 +122,7 @@ class KakaoLoginView(View):
         
         token_kakao_response = requests.post(url, headers=headers, data=body)
         access_token = json.loads(token_kakao_response.text).get('access_token')
+        refresh_token = json.loads(token_kakao_response.text).get('refresh_token')
 
         url = 'https://kapi.kakao.com/v2/user/me'
         headers = {
@@ -100,16 +134,19 @@ class KakaoLoginView(View):
 
         if User.objects.filter(social_login_id = kakao_response['id']).exists():
             user = User.objects.get(social_login_id=kakao_response['id'])
+            user.token = access_token
+            user.refresh_token = refresh_token
+            user.save()
             # jwt_token = jwt.encode({'id':user.id}, secret.SECRET_KEY, algorithm='HS256').decode('utf-8')
             print('user logged in')
             auth.login(request,user)
 
             return redirect('main:home')
-        
-        
         User(
             social_login_id = kakao_response['id'],
             social = 'kakao',
+            token = access_token,
+            refresh_token= refresh_token,
         ).save()
         user = User.objects.get(social_login_id=kakao_response['id'])
         Bookmark(

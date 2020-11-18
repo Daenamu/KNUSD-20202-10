@@ -73,6 +73,7 @@
             </a>
         {% else %}
             <a href="{% url 'main:logout' %}"><button>로그아웃</button></a>
+            <a href="{% url 'main:delete' %}"><button>회원탈퇴</button></a>
         {% endif %}
         <!--검색창-->
         {% if user.is_authenticated %}

@@ -61,6 +61,28 @@
           },
         });
       })
+      $(document).on("click", "#share", function() {
+          var pk = $(this).attr('name')
+          $.ajax({
+            type: "POST",
+            url: "{% url 'main:share' %}",
+            data: {'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}'}, // 서버로 데이터 전송시 옵션
+            dataType: "json", 
+            success: function(response) {
+                switch(response.success) {
+                    case 200: 
+                        alert("공유 성공");
+                        break;
+                    case 403:
+                        alert("메세지 접근 권한 없음");
+                        break;
+                }
+            },
+            error: function(request, status, error) {
+                alert("kakao API fail")
+            },
+          });
+      })
     </script>
 </head>
 
@@ -80,8 +102,8 @@
         <button type="button" class="btn btn-light">
             {% post_to_twitter post.get_absolute_url "Twitter" %}
         </button>
-        <button type="button" class="btn btn-light">
-            <a href="">카카오톡 공유</a>
+        <button type="button" class="btn btn-light" id="share" name='{{ post.id }}'>
+            카카오톡 공유
         </button>
         <button type="button" class="bookmark" name='{{ post.id }}'>
             {% if is_bookmark %}

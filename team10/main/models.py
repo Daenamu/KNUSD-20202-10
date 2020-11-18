@@ -13,6 +13,8 @@ class MajorList(models.Model):
 class User(AbstractBaseUser):
     social = models.CharField(max_length=20, blank=True)
     social_login_id = models.CharField(max_length=50, blank=True)
+    token = models.TextField('Token', null=True)
+    refresh_token = models.TextField('Refresh_token', null=True)
 
     USERNAME_FIELD = 'id'
     REQUIRED_FIELDS = ['social', 'social_login_id']
@@ -23,7 +25,7 @@ class Bookmark(models.Model):
     alarm = models.BooleanField(default=False)
 
 class BoardList(models.Model):
-    board_name = models.CharField(verbose_name='NAME', max_length=50)
+    board_name = models.CharField(verbose_name='NAME', max_length=50, unique=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     department = models.TextField('Department', null=True)
     alarm = models.BooleanField(default=False)
