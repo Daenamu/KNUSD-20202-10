@@ -15,6 +15,7 @@ class User(AbstractBaseUser):
     social_login_id = models.CharField(max_length=50, blank=True)
     token = models.TextField('Token', null=True)
     refresh_token = models.TextField('Refresh_token', null=True)
+    nickname = models.CharField(max_length=20, blank=True)
 
     USERNAME_FIELD = 'id'
     REQUIRED_FIELDS = ['social', 'social_login_id']

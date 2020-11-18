@@ -79,25 +79,35 @@ def CreateBoardView(request):
 def ShareView(request):
     id = request.POST.get('pk', None)
     post = Post.objects.get(id=id)
-    print(post.title)
-
     ACCESS_TOKEN = request.user.token
 
-    url = 'https://kapi.kakao.com/v2/api/talk/memo/default/send'
+    url = 'https://kapi.kakao.com/v1/api/talk/friends'
+    headers = {
+        "Authorization": f"Bearer {ACCESS_TOKEN}"
+    }
+    response = requests.get(url, headers=headers)
+    elements = json.loads(response.text).get('elements')
+    uuid = elements[0]['uuid']
+
+    url = 'https://kapi.kakao.com/v1/api/talk/friends/message/default/send'
     headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
     body = {
+        'receiver_uuids' : [f"{uuid}"],
         'template_object' : json.dumps({ 
             "object_type" : "text",
-            "text" : "Hello, world!",
+            "text" : f"{post.title}",
             "link" : {
-                "web_url" : "www.naver.com"
+                "web_url" : f"{post.url}",
+                "mobile_web_url" : f"{post.url}",
             }
         })
     }
     response = requests.post(url, headers=headers, data=body)
+
     context = {'success':response.status_code}
+
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 def KakaoDeleteView(request):
@@ -132,13 +142,14 @@ class KakaoLoginView(View):
         kakao_response = requests.get(url, headers=headers)
         kakao_response = json.loads(kakao_response.text)
 
+        nickname = kakao_response['properties']['nickname']
+
         if User.objects.filter(social_login_id = kakao_response['id']).exists():
             user = User.objects.get(social_login_id=kakao_response['id'])
             user.token = access_token
             user.refresh_token = refresh_token
             user.save()
             # jwt_token = jwt.encode({'id':user.id}, secret.SECRET_KEY, algorithm='HS256').decode('utf-8')
-            print('user logged in')
             auth.login(request,user)
 
             return redirect('main:home')
@@ -147,13 +158,13 @@ class KakaoLoginView(View):
             social = 'kakao',
             token = access_token,
             refresh_token= refresh_token,
+            nickname= nickname,
         ).save()
         user = User.objects.get(social_login_id=kakao_response['id'])
         Bookmark(
             user=user
         ).save()
         auth.login(request, user)
-        print('user saved')
         
         return redirect('main:home')
 
