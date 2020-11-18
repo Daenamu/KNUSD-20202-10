@@ -129,3 +129,10 @@ class PostLV(ListView):
 class PostDV(DetailView):
     template_name = 'main/post_detail.html'
     model = Post
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            context['board_name'] = self.request.GET['board_name']
+            return context
+        except: return context

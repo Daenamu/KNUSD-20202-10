@@ -111,5 +111,5 @@ def update_dentistry():
 if __name__ == '__main__':
     update_haksa()
     update_hanmun()
-    update_korean()
+    # update_korean()
     # update_dentistry()

@@ -55,7 +55,7 @@
                 {% for post in object_list %}
                 <tr> 
                     <td class = "text-center">{{ forloop.revcounter }}</td> 
-                    <td><a href="{% url 'main:post_detail' post.id %}">{{ post.title }}</a></td> 
+                    <td><a href="{% url 'main:post_detail' post.id %}{% if board_name %}?board_name={{ board_name }}{% endif %}">{{ post.title }}</a></td> 
                     <td class = "text-center">{{ post.upload_dt }}</td> 
                 </tr> 
                 {% endfor %} 

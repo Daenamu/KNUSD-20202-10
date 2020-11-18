@@ -36,9 +36,9 @@
     <!--학과이름-->
     <br>
     <h1>
-        <a href="{% url 'main:post_list' %}">
+        <a href="{% url 'main:post_list' %}{% if board_name %}?board_name={{ board_name }}{% endif %}">
             <img src = "{% static 'image/knu_image.jpg' %}" width = "150" height = "50">
-            {{ post.department }}
+            {{ board_name }}
         </a>
     </h1>   
     <div class = "container">
@@ -79,7 +79,7 @@
         <div class = "row text-center">
             <div class= "col">
                 <button type="button" class="btn btn-outline-secondary"><a href="{{ post.get_previous.get_absolute_url }}">이전글</a></button>
-                <button type="button" class="btn btn-outline-secondary"><a href="{% url 'main:post_list' %}">목록</a></button>
+                <button type="button" class="btn btn-outline-secondary"><a href="{% url 'main:post_list' %}{% if board_name %}?board_name={{ board_name }}{% endif %}">목록</a></button>
                 <button type="button" class="btn btn-outline-secondary"><a href="{{ post.get_next.get_absolute_url }}">다음글</a></button>
             </div>    
         </div>
