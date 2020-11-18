@@ -61,11 +61,11 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><a href="{% url 'main:post_list' %}?board_name='전체 공지'">전체 공지사항</a></td>
+                    <td><a href="{% url 'main:post_list' %}?board_name=전체 공지">전체 공지사항</a></td>
                 </tr>
                 {% if user.is_authenticated %}
                     <tr>
-                        <td><a href="{% url 'main:post_list' %}?board_name='북마크 공지'">북마크 공지사항</a></td>
+                        <td><a href="{% url 'main:post_list' %}?board_name=Bookmark">북마크 공지사항</a></td>
                     </tr>
                     {% for board in boards %}
                         <tr>
