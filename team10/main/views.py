@@ -14,14 +14,24 @@ from django.db.models import Q
 
 def AlarmView(request):
     board_name = request.POST.get('board_name', None)
-    board = BoardList.objects.get(user=request.user, board_name=board_name)
-    if board.alarm:
-        board.alarm = False
-        result = False
+    if board_name == "bookmark":
+        bookmark = Bookmark.objects.get(user=request.user)
+        if bookmark.alarm:
+            bookmark.alarm = False
+            result = False
+        else:
+            bookmark.alarm = True
+            result = True
+        bookmark.save()
     else:
-        board.alarm = True
-        result = True
-    board.save()
+        board = BoardList.objects.get(user=request.user, board_name=board_name)
+        if board.alarm:
+            board.alarm = False
+            result = False
+        else:
+            board.alarm = True
+            result = True
+        board.save()
     context = {'result':result}
     return HttpResponse(json.dumps(context), content_type="application/json")
     
@@ -129,9 +139,13 @@ class HomeView(TemplateView):
 
         if self.request.user.is_authenticated:
             boards = BoardList.objects.filter(user=self.request.user)
+            bookmark = Bookmark.objects.get(user=self.request.user)
+            bookmark = bookmark.alarm
         else:
             boards = []
+            bookmark = False
         context['boards'] = boards
+        context['bookmark'] = bookmark
 
         return context
 

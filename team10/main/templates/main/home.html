@@ -99,6 +99,15 @@
                 {% if user.is_authenticated %}
                     <tr>
                         <td><a href="{% url 'main:post_list' %}?board_name=Bookmark">북마크 공지사항</a></td>
+                        <td>
+                            <button type="button" class="alarm" name='bookmark' id="bookmark">
+                                {% if bookmark %}
+                                    <i class="fas fa-bell" id="alarm_icon"></i>
+                                {% else %}
+                                    <i class="far fa-bell" id="alarm_icon"></i>
+                                {% endif %}
+                            </button>
+                        </td>
                     </tr>
                     {% for board in boards %}
                         <tr>

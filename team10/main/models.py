@@ -20,6 +20,7 @@ class User(AbstractBaseUser):
 class Bookmark(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     post = models.TextField('Posts', null=True)
+    alarm = models.BooleanField(default=False)
 
 class BoardList(models.Model):
     board_name = models.CharField(verbose_name='NAME', max_length=50)
