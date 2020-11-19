@@ -5,7 +5,7 @@
     치과대학 공지에는 이미지 존재 X
 '''
 
-import pandas as pd
+# import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 import re
