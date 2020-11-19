@@ -81,20 +81,32 @@ def ShareView(request):
     post = Post.objects.get(id=id)
     ACCESS_TOKEN = request.user.token
 
+    '''
     url = 'https://kapi.kakao.com/v1/api/talk/friends'
     headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
     response = requests.get(url, headers=headers)
-    elements = json.loads(response.text).get('elements')
-    uuid = elements[0]['uuid']
+    if response.status_code == 403:
+        required_scopes = json.loads(response.text).get('required_scopes')
+        url = f'https://kauth.kakao.com/oauth/authorize?client_id={secret.App_key}&redirect_uri={secret.Redirect_URI}&response_type=code&scope={",".join(str(x) for x in required_scopes)}'
+        requests.get(url)
 
-    url = 'https://kapi.kakao.com/v1/api/talk/friends/message/default/send'
+        url = 'https://kapi.kakao.com/v1/api/talk/friends'
+        headers = {
+            "Authorization": f"Bearer {ACCESS_TOKEN}"
+        }
+        response = requests.get(url, headers=headers)
+
+    
+    print(response)
+    '''
+    
+    url = 'https://kapi.kakao.com/v2/api/talk/memo/default/send'
     headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
     body = {
-        'receiver_uuids' : [f"{uuid}"],
         'template_object' : json.dumps({ 
             "object_type" : "text",
             "text" : f"{post.title}",
@@ -105,7 +117,7 @@ def ShareView(request):
         })
     }
     response = requests.post(url, headers=headers, data=body)
-
+    
     context = {'success':response.status_code}
 
     return HttpResponse(json.dumps(context), content_type="application/json")
