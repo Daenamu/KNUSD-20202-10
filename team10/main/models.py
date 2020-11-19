@@ -39,8 +39,6 @@ class Post(models.Model):
     upload_dt = models.DateTimeField('Upload Date')
     department = models.CharField('Department', max_length=50)
     url = models.URLField('URL')
-    image_url = models.URLField('URL', blank=True, null=True)
-    download_url = models.URLField('URL', blank=True, null=True)
 
     class Meta:
         verbose_name = 'post'

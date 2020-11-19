@@ -18,9 +18,10 @@ def update_haksa():
         if key.title != latest:
             data_dict = haksaCrawl.extract_latest_notices(key.title)
             for data in data_dict:
-                print(f"{data['title']} is updated")
-                fb = Post(title=data['title'], upload_dt=data['modify_dt'], department=data['type'], content=data['content'], url=data['url'], image_url=data['image_url'], download_url=['download_url'])
-                fb.save()
+                if data['content'] != "":
+                    print(f"{data['title']} is updated")
+                    fb = Post(title=data['title'], upload_dt=data['modify_dt'], department=data['type'], content=data['content'], url=data['url'])
+                    fb.save()   
             return latest
         else:
             return None
@@ -28,8 +29,9 @@ def update_haksa():
         data_dict = haksaCrawl.extract_indeed_notices(3)
         # data_dict = haksaCrawl.extract_indeed_notices(haksaCrawl.extract_indeed_pages())
         for data in data_dict:
-            fb = Post(title=data['title'], upload_dt=data['modify_dt'], department=data['type'], content=data['content'], url=data['url'], image_url=data['image_url'], download_url=['download_url'])
-            fb.save()
+            if data['content'] != "":
+                fb = Post(title=data['title'], upload_dt=data['modify_dt'], department=data['type'], content=data['content'], url=data['url'])
+                fb.save()
         return haksaCrawl.check_latest()
 
 def update_hanmun():
@@ -43,8 +45,9 @@ def update_hanmun():
         if key.title != latest:
             data_dict = hanmun_crawl.extract_latest_notices(key.title)
             for data in data_dict:
-                fb = Post(title=data['title'], upload_dt=data['modify_dt'], department=data['type'], content=data['content'], url=data['url'], image_url=data['image_url'], download_url=['download_url'])
-                fb.save()
+                if data['content'] != "":
+                    fb = Post(title=data['title'], upload_dt=data['modify_dt'], department=data['type'], content=data['content'], url=data['url'])
+                    fb.save()
             return latest
         else:
             return None
@@ -52,8 +55,9 @@ def update_hanmun():
         data_dict = hanmun_crawl.extract_hanmun_notices(3)
         # data_dict = hanmun_crawl.extract_hanmun_notices(hanmun_crawl.extract_last_pages())
         for data in data_dict:
-            fb = Post(title=data['title'], upload_dt=data['modify_dt'], department=data['type'], content=data['content'], url=data['url'], image_url=data['image_url'], download_url=['download_url'])
-            fb.save()
+            if data['content'] != "":
+                fb = Post(title=data['title'], upload_dt=data['modify_dt'], department=data['type'], content=data['content'], url=data['url'])
+                fb.save()
         return hanmun_crawl.check_latest()
 
 def update_korean():
@@ -67,8 +71,9 @@ def update_korean():
         if key.title != latest:
             data_dict = korean_crawl.extract_latest_notices(key.title)
             for data in data_dict:
-                fb = Post(title=data['title'], upload_dt=data['modify_dt'], department=data['type'], content=data['content'], url=data['url'], image_url=data['image_url'], download_url=['download_url'])
-                fb.save()
+                if data['content'] != "":
+                    fb = Post(title=data['title'], upload_dt=data['modify_dt'], department=data['type'], content=data['content'], url=data['url'])
+                    fb.save()
             return latest
         else:
             return None
@@ -76,8 +81,9 @@ def update_korean():
         data_dict = korean_crawl.extract_korean_notices(3)
         # data_dict = korean_crawl.extract_korean_notices(korean_crawl.extract_last_pages())
         for data in data_dict:
-            fb = Post(title=data['title'], upload_dt=data['modify_dt'], department=data['type'], content=data['content'], url=data['url'], image_url=data['image_url'], download_url=['download_url'])
-            fb.save()
+            if data['content'] != "":
+                fb = Post(title=data['title'], upload_dt=data['modify_dt'], department=data['type'], content=data['content'], url=data['url'])
+                fb.save()
         return korean_crawl.check_latest()
 
 def update_dentistry():
@@ -91,8 +97,9 @@ def update_dentistry():
         if key.title != latest:
             data_dict = dentistryCrawl.dent_extract_latest_notices(key.title)
             for data in data_dict:
-                fb = Post(title=data['title'], upload_dt=data['modify_dt'], department=data['type'], content=data['content'], url=data['url'], image_url=data['image_url'], download_url=['download_url'])
-                fb.save()
+                if data['content'] != "":
+                    fb = Post(title=data['title'], upload_dt=data['modify_dt'], department=data['type'], content=data['content'])
+                    fb.save()
             return latest
         else:
             return None
@@ -100,8 +107,9 @@ def update_dentistry():
         data_dict = dentistryCrawl.dent_extract_indeed_notices(3)
         # data_dict = dentistryCrawl.dent_extract_indeed_notices(dentistryCrawl.dent_extract_indeed_pages())
         for data in data_dict:
-            fb = Post(title=data['title'], upload_dt=data['modify_dt'], department=data['type'], content=data['content'], url=data['url'], image_url=data['image_url'], download_url=['download_url'])
-            fb.save()
+            if data['content'] != "":
+                fb = Post(title=data['title'], upload_dt=data['modify_dt'], department=data['type'], content=data['content'])
+                fb.save()
         return dentistryCrawl.dent_check_latest()
 
 

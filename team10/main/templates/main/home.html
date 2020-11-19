@@ -81,6 +81,7 @@
                 <form class="navbar-search pull-right" action="{% url 'main:post_list' %}" method='GET'>
                     <input class="search-query" type="text" placeholder="Search" name='search_key'>
                     <input class="btn btn-secondary" type="submit" value="검색">
+                    <input type="text" value="전체 공지" name='board_name' style="display: none">
                 </form>
             </div>
         {% endif %}
