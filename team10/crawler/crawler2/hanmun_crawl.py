@@ -64,14 +64,19 @@ def hanmun_crawl(html,url):
 
 
 def extract_pages_url(p_num):
+    pages = []
     result = requests.get(URL)
     soup = BeautifulSoup(result.text, "html.parser")
 
     paging = soup.find("div",{"class":"paging"})
-    pages = paging.find_all("a").attrs["href"]
 
-    return pages[p_num-1]
+    for page in paging:
+      if page != None:
+        pages.append(paging.find("a").attrs["href"])
 
+    return "http://hanmun.knu.ac.kr/"+pages[p_num-1]
+
+print(extract_pages_url(3))
 
 def extract_hanmun_notices(last_pages):
   notices = []
