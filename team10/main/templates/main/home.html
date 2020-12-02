@@ -68,12 +68,16 @@
     <br><br>
     <div class = "container">
         {% if not user.is_authenticated %}
-            <a href="https://kauth.kakao.com/oauth/authorize?client_id={{ app_key }}&redirect_uri={{ redirect_uri }}&response_type=code">
-                <img src = "{% static 'image/kakao_login.png' %}">
-            </a>
+            <div style="float: right;">
+                <a href="https://kauth.kakao.com/oauth/authorize?client_id={{ app_key }}&redirect_uri={{ redirect_uri }}&response_type=code">
+                    <img src = "{% static 'image/kakao_login.png' %}">
+                </a>
+            </div>
         {% else %}
-            <a href="{% url 'main:logout' %}"><button>로그아웃</button></a>
-            <a href="{% url 'main:delete' %}"><button>회원탈퇴</button></a>
+            <div style="float: right;">
+                <a href="{% url 'main:logout' %}"><input class="btn btn-secondary" value="로그아웃"></a>
+                <a href="{% url 'main:delete' %}"><input class="btn btn-secondary" value="회원탈퇴"></a>
+            </div>
         {% endif %}
         <!--검색창-->
         {% if user.is_authenticated %}
@@ -116,8 +120,7 @@
                             <td><a href="{% url 'main:post_list' %}?board_name={{ board.board_name }}">{{ board.board_name }}</a></td>
                             <td>
                                 <a href="{% url 'main:board_delete' %}?board_name={{ board.board_name }}">
-                                    <button type="button">게시판 삭제</button>
-                                </a>
+                                    <input class="btn btn-secondary" value="게시판삭제"></a>
                             </td>
                             <td>
                                 <button type="button" class="alarm" name='{{ board.board_name }}' id="{{ board.id }}">
