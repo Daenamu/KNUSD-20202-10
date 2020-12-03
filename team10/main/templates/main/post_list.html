@@ -17,17 +17,12 @@
 
 </head>
 <body>
-    <!--게시판이름-->
-    {{ board_name }}
-    <!--학과 리스트-->
-    {% for department in departments %}
-        {{ department }}
-    {% endfor %}
     <br>
     <h1>
         <a href="{% url 'main:home' %}">
             <img src = "{% static 'image/knu_image.jpg' %}" width = "150" height = "50">
         </a>
+        {{ board_name }}
     </h1>
 
     <br><br>
@@ -47,8 +42,8 @@
             <thead> 
                 <tr> 
                     <th width = "30">번호</th> 
-                    <th width = "400">제목</th> 
-                    <th width = "80">등록일</th> 
+                    <th width = "350">제목</th> 
+                    <th width = "130">등록일</th> 
                 </tr> 
             </thead> 
             <tbody> 
