@@ -116,6 +116,8 @@ def fashion_extract_indeed_notices(list_pages):
 
     for page in list_pages: 
         page_num = page_num + 1
+        if page_num == 3: 
+            break
         link = requests.get(page)
         soup = BeautifulSoup(link.text, "html.parser")
         result = soup.find("div", {"class":"board_list"})

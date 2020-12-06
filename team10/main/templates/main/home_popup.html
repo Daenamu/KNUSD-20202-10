@@ -24,15 +24,15 @@
                 </tr>
             </thead> 
             <tbody> 
-                <form method="post" action="main:create_board">
+                <form method="post" action="{% url 'main:create_board' %}">
                     {% csrf_token %}
                     {% for department in departments %}
                     <tr> 
                         <td>{{ department.major }}</td>
                         <td>
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" name="department[]" value="{{ department.major }}" class="custom-control-input" id="myid">
-                                <label class="custom-control-label" for="myid"></label>
+                                <input type="checkbox" name="department[]" value="{{ department.major }}" class="custom-control-input" id="{{ department.major }}">
+                                <label class="custom-control-label" for="{{ department.major }}"></label>
                             </div>
                         </td>> 
                     </tr> 

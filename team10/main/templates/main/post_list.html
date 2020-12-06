@@ -21,9 +21,14 @@
     <h1>
         <a href="{% url 'main:home' %}">
             <img src = "{% static 'image/knu_image.jpg' %}" width = "150" height = "50">
+            {{ board_name }}
         </a>
-        {{ board_name }}
     </h1>
+    <p class="text-center">
+        {% for department in departments %}
+            {{ department }}
+        {% endfor %}
+    </p>
 
     <br><br>
     <div class = "container">
