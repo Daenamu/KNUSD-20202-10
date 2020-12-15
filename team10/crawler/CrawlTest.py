@@ -13,5 +13,5 @@ from fashionCrawl import fashion_extract_indeed_pages, fashion_extract_indeed_no
 #child_extract_indeed_notices(pages)
 
 #의류학과 crawl test
-pages = fashion_extract_indeed_pages()
-fashion_extract_indeed_notices(pages)
+#pages = fashion_extract_indeed_pages()
+#fashion_extract_indeed_notices(pages)
