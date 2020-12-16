@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판 추가</title>
+    <link rel = "stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel = "stylesheet" href="{% static 'css/site.css' %}">
+    <link rel="shortcut icon" href="http://www.knu.ac.kr/wbbs/img/favicon.ico"/>
+    <script language = "javascript">
+        function closePopup() {
+            close();
+        }
+    </script>
+</head>
+<body>
+    <div class = "container">
+        <table class = "table table-striped">
+            <thead> 
+                <tr> 
+                    <th>게시판 리스트</th>
+                    <th>추가</th>
+                </tr>
+            </thead> 
+            <tbody> 
+                <form method="post" action="{% url 'main:create_board' %}">
+                    {% csrf_token %}
+                    {% for department in departments %}
+                    <tr> 
+                        <td>{{ department.major }}</td>
+                        <td>
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="department[]" value="{{ department.major }}" class="custom-control-input" id="{{ department.major }}">
+                                <label class="custom-control-label" for="{{ department.major }}"></label>
+                            </div>
+                        </td>> 
+                    </tr> 
+                    {% endfor %}
+                    <div style="float: right;">
+                        <input type="text" name="board_name" placeholder="게시판 이름" size="20" required>
+                        <input type="submit" value="게시판 생성" class="btn btn-secondary">
+                    </div>
+                </form>
+            </tbody>     
+        </table>
+    </div>
+</body>
+</html>

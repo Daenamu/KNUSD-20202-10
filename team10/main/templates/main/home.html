@@ -1,0 +1,148 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학과공지 알리미</title>
+    <link rel = "stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel = "stylesheet" href="{% static 'css/site.css' %}">
+    <link rel="shortcut icon" href="http://www.knu.ac.kr/wbbs/img/favicon.ico"/>
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
+    />
+    <script
+    src="https://code.jquery.com/jquery-3.5.1.min.js"
+    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+    crossorigin="anonymous"></script>
+    <style>
+        h1{
+            font-size: 70px;
+            text-align: center;
+        }        
+        a {
+            color: black;
+            text-decoration: none;
+        }
+    </style>
+    <script language = "javascript">
+        function showPopup() {
+            window.open("{% url 'main:popup' %}", "게시판 추가", "width = 500, height = 800, left = 700, top = 100");
+        }
+    </script>
+    <script type="text/javascript">
+        $(document).on("click", ".alarm", function(){
+          var board_name = $(this).attr('name')
+          var id = $(this).attr('id')
+          $.ajax({ 
+            type: "POST",
+            url: "{% url 'main:alarm' %}",
+            data: {'board_name': board_name, 'csrfmiddlewaretoken': '{{ csrf_token }}'}, // 서버로 데이터 전송시 옵션
+            dataType: "json", 
+            // 서버측에서 전송한 Response 데이터 형식 (json)
+            success: function(response){ // 통신 성공시 - 알람 버튼 칠하기
+              if (response.result) { // 알람 설정 완료
+                $(`#${id}`).children("#alarm_icon").replaceWith( '<i class="fas fa-bell" id="alarm_icon"></i>' );
+              }
+              else {
+                $(`#${id}`).children("#alarm_icon").replaceWith( '<i class="far fa-bell" id="alarm_icon"></i>' )
+              }
+              
+            },
+            error: function(request, status, error){ // 통신 실패시 - alert
+              alert("북마크 실패하였습니다.")
+            },
+          });
+        })
+      </script>
+</head>
+<body>
+    <br>
+    <h1>
+        <img src = "{% static 'image/knu_image.jpg' %}" width = "150" height = "50">
+        학과공지 알리미
+    </h1>
+
+    <br><br>
+    <div class = "container">
+        {% if not user.is_authenticated %}
+            <div style="float: right;">
+                <a href="https://kauth.kakao.com/oauth/authorize?client_id={{ app_key }}&redirect_uri={{ redirect_uri }}&response_type=code">
+                    <img src = "{% static 'image/kakao_login.png' %}">
+                </a>
+            </div>
+        {% else %}
+            <div style="float: right;">
+                <a href="{% url 'main:logout' %}"><input class="btn btn-secondary" value="로그아웃"></a>
+                <a href="{% url 'main:delete' %}"><input class="btn btn-secondary" value="회원탈퇴"></a>
+            </div>
+        {% endif %}
+        <!--검색창-->
+        {% if user.is_authenticated %}
+            <div style="float: right;">
+                <form class="navbar-search pull-right" action="{% url 'main:post_list' %}" method='GET'>
+                    <input class="search-query" type="text" placeholder="Search" name='search_key'>
+                    <input class="btn btn-secondary" type="submit" value="검색">
+                    <input type="text" value="전체 공지" name='board_name' style="display: none">
+                </form>
+            </div>
+        {% endif %}
+
+        <!--전체게시판-->
+        <br>
+        <table class = "table table-hover">
+            <thead>
+                <tr>
+                    <th>전체 게시판</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="{% url 'main:post_list' %}?board_name=전체 공지">전체 공지사항</a></td>
+                </tr>
+                {% if user.is_authenticated %}
+                    <tr>
+                        <td><a href="{% url 'main:post_list' %}?board_name=Bookmark">북마크 공지사항</a></td>
+                        <td>
+                            <button type="button" class="alarm" name='bookmark' id="bookmark">
+                                {% if bookmark %}
+                                    <i class="fas fa-bell" id="alarm_icon"></i>
+                                {% else %}
+                                    <i class="far fa-bell" id="alarm_icon"></i>
+                                {% endif %}
+                            </button>
+                        </td>
+                    </tr>
+                    {% for board in boards %}
+                        <tr>
+                            <td><a href="{% url 'main:post_list' %}?board_name={{ board.board_name }}">{{ board.board_name }}</a></td>
+                            <td>
+                                <a href="{% url 'main:board_delete' %}?board_name={{ board.board_name }}">
+                                    <input class="btn btn-secondary" value="게시판삭제"></a>
+                            </td>
+                            <td>
+                                <button type="button" class="alarm" name='{{ board.board_name }}' id="{{ board.id }}">
+                                    {% if board.alarm %}
+                                        <i class="fas fa-bell" id="alarm_icon"></i>
+                                    {% else %}
+                                        <i class="far fa-bell" id="alarm_icon"></i>
+                                    {% endif %}
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+
+        <!--게시판추가 버튼-->
+        {% if user.is_authenticated %}
+            <div style = "float: right;">
+                <button type = "button" onclick= "showPopup();" class = "btn btn-secondary">게시판추가</button>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

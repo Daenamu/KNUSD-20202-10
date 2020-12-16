@@ -17,19 +17,26 @@
 
 </head>
 <body>
-    <!--학과이름-->
     <br>
     <h1>
-        <img src = "{% static 'image/knu_image.jpg' %}" width = "150" height = "50">
-        {{ post.department }}
+        <a href="{% url 'main:home' %}">
+            <img src = "{% static 'image/knu_image.jpg' %}" width = "150" height = "50">
+            {{ board_name }}
+        </a>
     </h1>
+    <p class="text-center">
+        {% for department in departments %}
+            {{ department }}
+        {% endfor %}
+    </p>
 
     <br><br>
     <div class = "container">
         <!--검색창-->
         <div style="float: right;">
-            <form class="navbar-search pull-right">
-                <input class="search-query" type="text" placeholder="Search">
+            <form class="navbar-search pull-right" action="" method='GET'>
+                <input class="search-query" type="text" placeholder="Search" name='search_key'>
+                <input type="text" name="board_name" value='{{ board_name }}' style="display:none">
                 <input class="btn btn-secondary" type="submit" value="검색">
             </form>
         </div>
@@ -40,15 +47,15 @@
             <thead> 
                 <tr> 
                     <th width = "30">번호</th> 
-                    <th width = "400">제목</th> 
-                    <th width = "80">등록일</th> 
+                    <th width = "350">제목</th> 
+                    <th width = "130">등록일</th> 
                 </tr> 
             </thead> 
             <tbody> 
                 {% for post in object_list %}
                 <tr> 
                     <td class = "text-center">{{ forloop.revcounter }}</td> 
-                    <td><a href="{% url 'main:post_detail' post.id %}">{{ post.title }}</a></td> 
+                    <td><a href="{% url 'main:post_detail' post.id %}{% if board_name %}?board_name={{ board_name }}{% endif %}">{{ post.title }}</a></td> 
                     <td class = "text-center">{{ post.upload_dt }}</td> 
                 </tr> 
                 {% endfor %} 
@@ -60,22 +67,22 @@
             <ul class = "pagination justify-content-center">
                 {% if page_obj.has_previous %}
                     {% if page_obj.previous_page_number > 1 %}
-                        <li class = "page-item"><a class="page-link" href="?page=1">맨 앞으로</a></li>
+                        <li class = "page-item"><a class="page-link" href="?page=1{% if board_name %}&board_name={{ board_name }}{% endif %}">맨 앞으로</a></li>
                     {% endif %}
                     {% if page_obj.number|add:-10 > 1 %}
-                        <li class = "page-item"><a class="page-link" href="?page={{ page_obj.number|add:-10 }}">{{ page_obj.number|add:-10 }}</a></li>
+                        <li class = "page-item"><a class="page-link" href="?page={{ page_obj.number|add:-10 }}{% if board_name %}&board_name={{ board_name }}{% endif %}">{{ page_obj.number|add:-10 }}</a></li>
                         <li class = "page-item"><a class="page-link" href="#">...</a></li>
                     {% endif %}
-                    <li class = "page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
+                    <li class = "page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if board_name %}&board_name={{ board_name }}{% endif %}">{{ page_obj.previous_page_number }}</a></li>
                 {% endif %}
                 <li class = "page-item"><a class="page-link" href="#">{{ page_obj.number }}</a></li>
                 {% if page_obj.has_next %}
-                    <li class = "page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
+                    <li class = "page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if board_name %}&board_name={{ board_name }}{% endif %}">{{ page_obj.next_page_number }}</a></li>
                     <li class = "page-item"><a class="page-link" href="#">...</a></li>
                     {% if page_obj.number|add:10 < page_obj.paginator.num_pages %}
-                        <li class = "page-item"><a class="page-link" href="?page={{ page_obj.number|add:10 }}">{{ page_obj.number|add:10 }}</a></li>
+                        <li class = "page-item"><a class="page-link" href="?page={{ page_obj.number|add:10 }}{% if board_name %}&board_name={{ board_name }}{% endif %}">{{ page_obj.number|add:10 }}</a></li>
                     {% endif %}
-                    <li class = "page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">맨 뒤로</a></li>
+                    <li class = "page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if board_name %}&board_name={{ board_name }}{% endif %}">맨 뒤로</a></li>
                 {% endif %}
             </ul>
         </div>

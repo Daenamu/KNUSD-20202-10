@@ -1,4 +1,6 @@
 {% load static %}
+{% load social_share %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,16 +30,89 @@
             width: 1400px;
         }
     </style> 
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
+    />
+    <script
+    src="https://code.jquery.com/jquery-3.5.1.min.js"
+    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+    crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      $(document).on("click", ".bookmark", function(){
+        var pk = $(this).attr('name')
+        $.ajax({ 
+          type: "POST",
+          url: "{% url 'main:bookmark' %}",
+          data: {'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}'}, // 서버로 데이터 전송시 옵션
+          dataType: "json", 
+          // 서버측에서 전송한 Response 데이터 형식 (json)
+          success: function(response){ // 통신 성공시 - 북마크 버튼 칠하기
+            if (response.result) {
+                $('#bookmark').replaceWith( '<i class="fas fa-bookmark" id="bookmark"></i>' );
+            }
+            else {
+                $('#bookmark').replaceWith( '<i class="far fa-bookmark" id="bookmark"></i>' )
+            }
+            
+          },
+          error: function(request, status, error){ // 통신 실패시 - alert
+            alert("북마크 실패하였습니다.")
+          },
+        });
+      })
+      $(document).on("click", "#share", function() {
+          var pk = $(this).attr('name')
+          $.ajax({
+            type: "POST",
+            url: "{% url 'main:share' %}",
+            data: {'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}'}, // 서버로 데이터 전송시 옵션
+            dataType: "json", 
+            success: function(response) {
+                switch(response.success) {
+                    case 200: 
+                        alert("나에게 카카오톡 전송 완료하였습니다!");
+                        break;
+                    case 403:
+                        alert("메세지 접근 권한 없음");
+                        break;
+                }
+            },
+            error: function(request, status, error) {
+                alert("kakao API fail")
+            },
+          });
+      })
+    </script>
 </head>
 
 <body>
     <!--학과이름-->
     <br>
     <h1>
-        <img src = "{% static 'image/knu_image.jpg' %}" width = "150" height = "50">
-        {{ post.department }}
+        <a href="{% url 'main:post_list' %}{% if board_name %}?board_name={{ board_name }}{% endif %}">
+            <img src = "{% static 'image/knu_image.jpg' %}" width = "150" height = "50">
+            {{ board_name }}
+        </a>
     </h1>   
-     
+    <div class = "container">
+        <button type="button" class="btn btn-light">
+            {% post_to_facebook post.get_absolute_url "Facebook" %}
+        </button>
+        <button type="button" class="btn btn-light">
+            {% post_to_twitter post.get_absolute_url "Twitter" %}
+        </button>
+        <button type="button" class="btn btn-light" id="share" name='{{ post.id }}'>
+            카카오톡 공유
+        </button>
+        <button type="button" class="bookmark" name='{{ post.id }}'>
+            {% if is_bookmark %}
+                <i class="fas fa-bookmark" id="bookmark"></i>
+            {% else %}
+                <i class="far fa-bookmark" id="bookmark"></i>
+            {% endif %}
+        </button>        
+    </div>
     <br><br>
     <div class = "container">
         <!--게시글-->
@@ -51,25 +126,15 @@
             <tr>
                 <td>{{ post.content|linebreaks }}</td>
             </tr>
-            {% if post.image_url %}
-                <tr>
-                    <td><img src = "{{ post.image_url }}.jpg"></td>
-                </tr>
-            {% endif %}
-            {% if post.download_url %}
-                <tr>
-                    <td><a href="{{ post.download_url }}">{{ post.download_url }}</a></td>
-                </tr>
-            {% endif %}
         </table>
         
         <!--이전/다음글 버튼-->
         <br>
         <div class = "row text-center">
             <div class= "col">
-                <button type="button" class="btn btn-outline-secondary"><a href="{{ post.get_previous.get_absolute_url }}">이전글</a></button>
-                <button type="button" class="btn btn-outline-secondary">목록</button>
-                <button type="button" class="btn btn-outline-secondary"><a href="{{ post.get_next.get_absolute_url }}">다음글</a></button>
+                <button type="button" class="btn btn-outline-secondary"><a href="{{ post.get_previous.get_absolute_url }}{% if board_name %}?board_name={{ board_name }}{% endif %}">이전글</a></button>
+                <button type="button" class="btn btn-outline-secondary"><a href="{% url 'main:post_list' %}{% if board_name %}?board_name={{ board_name }}{% endif %}">목록</a></button>
+                <button type="button" class="btn btn-outline-secondary"><a href="{{ post.get_next.get_absolute_url }}{% if board_name %}?board_name={{ board_name }}{% endif %}">다음글</a></button>
             </div>    
         </div>
     </div>
