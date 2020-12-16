@@ -6,8 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>학과공지 알리미</title>
-    <link rel = "stylesheet" href="{% static 'css/bootstrap.css' %}">
-    <link rel = "stylesheet" href="{% static 'css/site.css' %}">
+    <link rel = "stylesheet" href="css/bootstrap.css">
+    <link rel = "stylesheet" href="css/site.css">
     <link rel="shortcut icon" href="http://www.knu.ac.kr/wbbs/img/favicon.ico"/>
     <link
     rel="stylesheet"
@@ -75,8 +75,8 @@
             </div>
         {% else %}
             <div style="float: left;">
-                <a href="{% url 'main:logout' %}"><input class="btn btn-secondary btn-sm" value="로그아웃"></a>
-                <a href="{% url 'main:delete' %}"><input class="btn btn-secondary btn-sm" value="회원탈퇴"></a>
+                <a href="{% url 'main:logout' %}"><input class="btn btn-secondary" style="width:25%" value="로그아웃"></a>
+                <a href="{% url 'main:delete' %}"><input class="btn btn-secondary" style="width:25%" value="회원탈퇴"></a>
             </div>
         {% endif %}
         <!--검색창-->
@@ -125,7 +125,7 @@
                             <td><a href="{% url 'main:post_list' %}?board_name={{ board.board_name }}">{{ board.board_name }}</a></td>
                             <td style = "width: 2cm;">
                                 <a href="{% url 'main:board_delete' %}?board_name={{ board.board_name }}">
-                                    <input class="btn btn-secondary" value="게시판삭제" ></a>
+                                    <input class="btn btn-secondary" style="width:200%" value="게시판삭제" ></a>
                             </td>
                             <td>
                                 <button type="button" class="alarm" name='{{ board.board_name }}' id="{{ board.id }}">
