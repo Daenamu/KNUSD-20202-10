@@ -81,6 +81,7 @@ def fashion_crawl(notice_url):
     modify_html = title_html.find("table")
     modify_htmls = modify_html.find_all("td")
     modify_dt = modify_htmls[1].get_text()
+    modify_dt = modify_dt.replace("/", '-')
 
     cont_html = soup.find("div", {"class":"cont"})
     cont = str(cont_html)
@@ -131,8 +132,8 @@ def fashion_extract_indeed_notices(list_pages):
                 notice_url = base_url + notice_url
                 notice = fashion_crawl(notice_url)
                 count = count + 1
-                print(f"{page_num}page {count}번 게시물 crawling")
-                #print(notice)
+                #print(f"{page_num}page {count}번 게시물 crawling")
+                print(notice)
                 notices.append(notice)
     return notices
 
