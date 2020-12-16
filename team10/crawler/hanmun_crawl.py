@@ -52,6 +52,7 @@ def extract_content_attach(url):
 def hanmun_crawl(html,url):
   view = html.select('div.board_view > table > tr ')[1]
   modify_dt = view.find_all("td")[1].string
+  modify_dt = modify_dt.replace("/","-")
   title = html.select('div.board_view > h2')[0].string
   print(title)
   content = extract_content_text(url)
@@ -76,7 +77,6 @@ def extract_pages_url(p_num):
 
     return "http://hanmun.knu.ac.kr/"+pages[p_num-1]
 
-print(extract_pages_url(3))
 
 def extract_hanmun_notices(last_pages):
   notices = []
@@ -88,7 +88,7 @@ def extract_hanmun_notices(last_pages):
     results = soup.select('td.subject > a')
 
     for result in results:
-      url = result.find("a").attrs["href"]
+      url = "https://hanmun.knu.ac.kr/"+result.attrs["href"]
       re = requests.get(url)
       sop = BeautifulSoup(re.text,"html.parser")
       notice = hanmun_crawl(sop,url)
@@ -98,6 +98,7 @@ def extract_hanmun_notices(last_pages):
   
   return notices 
 
+print(extract_hanmun_notices(1))
 
 def check_latest():
   link = requests.get("http://hanmun.knu.ac.kr/HOME/hanmun/sub.htm?mv_data=c3RhcnRQYWdlPTAmY29kZT1ub3RpY2UmbmF2X2NvZGU9aGFuMTU0NjgyNzc4OCZ0YWJsZT1leF9iYnNfZGF0YV9oYW5tdW4mc2VhcmNoX2l0ZW09JnNlYXJjaF9vcmRlcj0mb3JkZXJfbGlzdD0mbGlzdF9zY2FsZT0mdmlld19sZXZlbD0mdmlld19jYXRlPSZ2aWV3X2NhdGUyPQ==||")
