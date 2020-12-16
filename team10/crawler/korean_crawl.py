@@ -52,7 +52,6 @@ def korean_crawl(html,url):
   modify_dt = dt.split(" ")
   modify_dt = modify_dt[0].replace("/","-")
   modify_dt = "20"+modify_dt
-  print(modify_dt)
  
   content = extract_content_text(url)
   image_url = extract_content_image(url)
@@ -83,22 +82,20 @@ def extract_korean_notices(last_pages):
 
 
 def check_latest():
+  notes = []
   page = 1
   link = requests.get(f"http://korean.knu.ac.kr/bbs/board.php?bo_table=community01&page={page}")
   soup = BeautifulSoup(link.text, "html.parser")
   results = soup.find_all("td",{"class":"td_subject"})
-  tops = soup.find_all("td",{"class":"bo_notice"})
-  for result in results:
-      for top in tops:
-          if(result != top):
-              late = result
-          
-  url = late.find("a").attrs["href"]
-  re = requests.get(url)
-  sop = BeautifulSoup(re.text,"html.parser")
-  notice = korean_crawl(sop,url)
+  tops = soup.find_all("tr",{"class":"bo_notice"})
 
-  return notice['title']
+  for top in tops:
+    notes.append(top.find("td",{"class":"td_subject"}).text.strip())
+  
+  title = results[len(notes)].text.strip()
+  
+  return title
+  
 
 def extract_latest_notices(latest):
   notices = []
