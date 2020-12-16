@@ -132,7 +132,7 @@ def fashion_extract_indeed_notices(list_pages):
                 notice_url = base_url + notice_url
                 notice = fashion_crawl(notice_url)
                 count = count + 1
-                #print(f"{page_num}page {count}번 게시물 crawling")
+                print(f"{page_num}page {count}번 게시물 crawling")
                 print(notice)
                 notices.append(notice)
     return notices

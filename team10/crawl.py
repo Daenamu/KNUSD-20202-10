@@ -87,7 +87,7 @@ def update_fasion():
         return fashionCrawl.fashion_check_latest()
 
 
-"""
+
 def update_hanmun():
     try:
         key = Post.objects.filter(department="한문학과").latest('upload_dt')
@@ -139,7 +139,7 @@ def update_korean():
                 fb = Post(title=data['title'], upload_dt=data['modify_dt'], department=data['type'], content=data['content'], url=data['url'])
                 fb.save()
         return korean_crawl.check_latest()
-"""
+
 
 if __name__ == '__main__':
     while True:   
@@ -149,30 +149,32 @@ if __name__ == '__main__':
         else:
             print("학사 공지: 최신 상태")
 
-        """
+        
         latest = update_child()
         if latest is not None:
             print(f"새 아동학부 공지: {latest}")
         else:
             print("아동학부 공지: 최신 상태")
-        """
+        
         
         latest = update_fasion()
         if latest is not None:
             print(f"새 의류학과 공지: {latest}")
         else:
             print("의류학과 공지: 최신 상태")
-        '''
+        
+        
         latest = update_hanmun()
         if latest is not None:
             print(f"새 한문학과 공지: {latest}")
         else:
             print("한문학과 공지: 최신 상태")
-
+        
+        
         latest = update_korean()
         if latest is not None:
             print(f"새 국어국문학과 공지: {latest}")
         else:
             print("국어국문학과 공지: 최신 상태")
-        '''
+        
         time.sleep(60)
