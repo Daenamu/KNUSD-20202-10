@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 # 국어국문학과 공지 crawl
 
+
 PAGE = 1
 URL = f"http://korean.knu.ac.kr/bbs/board.php?bo_table=community01&page={PAGE}"
 
