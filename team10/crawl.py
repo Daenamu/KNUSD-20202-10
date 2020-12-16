@@ -170,11 +170,11 @@ if __name__ == '__main__':
         else:
             print("한문학과 공지: 최신 상태")
         
-        '''
+        
         latest = update_korean()
         if latest is not None:
             print(f"새 국어국문학과 공지: {latest}")
         else:
             print("국어국문학과 공지: 최신 상태")
-        '''
+        
         time.sleep(60)
