@@ -98,8 +98,6 @@ def extract_hanmun_notices(last_pages):
   
   return notices 
 
-print(extract_hanmun_notices(1))
-
 def check_latest():
   link = requests.get("http://hanmun.knu.ac.kr/HOME/hanmun/sub.htm?mv_data=c3RhcnRQYWdlPTAmY29kZT1ub3RpY2UmbmF2X2NvZGU9aGFuMTU0NjgyNzc4OCZ0YWJsZT1leF9iYnNfZGF0YV9oYW5tdW4mc2VhcmNoX2l0ZW09JnNlYXJjaF9vcmRlcj0mb3JkZXJfbGlzdD0mbGlzdF9zY2FsZT0mdmlld19sZXZlbD0mdmlld19jYXRlPSZ2aWV3X2NhdGUyPQ==||")
   soup = BeautifulSoup(link.text, "html.parser")
