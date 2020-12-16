@@ -140,8 +140,8 @@ def extract_indeed_notices(last_pages):
                 notice = haksa_crawl(result, page)
                 notices.append(notice)
                 count = count + 1
-                print(f"{page - 1}page {count}번 게시물 crawling")
-                #print(notice)
+                #print(f"{page - 1}page {count}번 게시물 crawling")
+                print(notice)
     #print(notices[0])
     return notices
 
