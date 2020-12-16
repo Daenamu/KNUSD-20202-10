@@ -48,14 +48,16 @@ def extract_content_attach(url):
 
 def korean_crawl(html,url):
   title = html.find("h1",{"id":"bo_v_title"}).string.strip()
-  modify_dt = html.find_all("strong")[1].string
+  dt = html.find_all("strong")[1].string
+  dt = dt.split(" ")
+  modify_dt = dt[0].replace("-","/")
+ 
   content = extract_content_text(url)
   image_url = extract_content_image(url)
   download_url = extract_content_attach(url)
 
   dict_data = {'title':title, 'modify_dt':modify_dt, 'content':content, 'type':"국어국문학과", 'url':url, 'image_url':image_url, 'download_url':download_url}
   return dict_data
-
 
 def extract_korean_notices(last_pages):
   notices = []
