@@ -50,7 +50,9 @@ def korean_crawl(html,url):
   title = html.find("h1",{"id":"bo_v_title"}).string.strip()
   dt = html.find_all("strong")[1].string
   modify_dt = dt.split(" ")
-  
+  modify_dt = modify_dt[0].replace("/","-")
+  modify_dt = "20"+modify_dt
+  print(modify_dt)
  
   content = extract_content_text(url)
   image_url = extract_content_image(url)
@@ -78,6 +80,8 @@ def extract_korean_notices(last_pages):
       print(f"{page}page {count}번 게시물 crawling")
   
   return notices 
+
+print(extract_korean_notices(1))
 
 def check_latest():
   page = 1
