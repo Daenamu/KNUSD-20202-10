@@ -81,7 +81,6 @@ def extract_korean_notices(last_pages):
   
   return notices 
 
-print(extract_korean_notices(1))
 
 def check_latest():
   page = 1
